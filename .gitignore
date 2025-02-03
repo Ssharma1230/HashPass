@@ -12,7 +12,7 @@ package-lock.json
 .env
 
 # next.js
-/.next/
+.next/
 /out/
 /build
 
