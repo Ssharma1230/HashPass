@@ -1,9 +1,9 @@
 name: Build Workflow
 
 run-name: Build React App
-  on:
-    pull_request:
-      types: [opened, synchronize, reopened, edited]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
   
 jobs:
   build:
