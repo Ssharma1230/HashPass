@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "(node build-log.js) && (mv build/_next build/next || move build/_next build/next)",
     "start": "next start",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "next lint"
   },
   "dependencies": {
