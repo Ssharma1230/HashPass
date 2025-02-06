@@ -25,3 +25,7 @@ jobs:
     - name: Build app
       run: npm run build
       working-directory: ./extension/src/hashpass
+
+    - name: Run tests
+      run: npm test
+      working-directory: ./extension/src/hashpass
