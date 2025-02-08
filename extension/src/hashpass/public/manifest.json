@@ -4,7 +4,8 @@
     "version": "1.0",
     "description": "A Chrome extension with React and Next.js",
     "action": {
-      "default_popup": "index.html"
-    }
+      "default_popup": "popup/index.html"
+    },
+    "options_page": "options/index.html"
   }
   
