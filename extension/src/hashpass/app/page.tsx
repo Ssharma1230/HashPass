@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import HashingTestComponent from './hashing_test_component';
 
 export default function Home() {
