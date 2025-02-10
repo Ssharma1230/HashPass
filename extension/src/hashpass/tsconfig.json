@@ -6,7 +6,10 @@
       "dom.iterable",
       "esnext"
     ],
+<<<<<<< HEAD
     "types": ["chrome"],
+=======
+>>>>>>> main
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
