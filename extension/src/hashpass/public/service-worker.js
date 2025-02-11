@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "detected_login_form") {
         chrome.windows.create({
             url: chrome.runtime.getURL("index.html"),
