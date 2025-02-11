@@ -3,7 +3,7 @@
     "name": "HashPass",
     "version": "1.0",
     "description": "A Chrome extension with React and Next.js",
-    "permissions": ["storage", "scipting"],
+    "permissions": ["storage", "scripting", "storage"],
     "background": {
       "service_worker": "service-worker.js"
     },
