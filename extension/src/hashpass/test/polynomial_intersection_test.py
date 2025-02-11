@@ -1,42 +1,26 @@
 import numpy as np
 import sympy as sp
 
-def find_linear_cubic_intersections_sympy(a, b, c, d, p, q):
-    """
-    Find real intersection points (x, y) between:
-      L(x) = p*x + q  and  C(x) = a*x^3 + b*x^2 + c*x + d,
-    using Sympy's symbolic solver.
-    """
-    x = sp.Symbol('x', real=True)
 
-    # Define the polynomial a*x^3 + b*x^2 + (c - p)*x + (d - q)
-    polynomial = a*x**3 + b*x**2 + (c - p)*x + (d - q)
+def find_intersections_cubic_line(a, b, c, d, p, q, tol=1e-12):
+    # Form the cubic equation: a*x^3 + b*x^2 + (c - p)*x + (d - q) = 0
+    poly_coeffs = [a, b, c - p, d - q]
 
-    # Solve for x
-    solutions = sp.solve(sp.Eq(polynomial, 0), x, dict=True)
+    # Solve for x (returns up to 3 roots, possibly complex)
+    roots = np.roots(poly_coeffs)
 
-    # Extract the x-values
-    x_solutions = [sol[x] for sol in solutions]
+    # Filter real roots based on tiny imaginary parts
+    real_roots = [r.real for r in roots if abs(r.imag) < tol]
 
-    # Filter real solutions
-    real_x_solutions = []
-    for x_val in x_solutions:
-        # Sympy might give a symbolic expression; let's see if it's real
-        # We'll evaluate numerically and check if the imaginary part is ~ 0
-        x_eval = x_val.evalf()
-        if abs(x_eval.as_real_imag()[1]) < 1e-12:
-            real_x_solutions.append(x_eval)
+    # For each real root, compute y from the linear function
+    intersections = []
+    for x_val in real_roots:
+        y_val = p * x_val + q  # or a*x_val^3 + b*x_val^2 + c*x_val + d — they should match
+        intersections.append((x_val, y_val))
 
-    # Compute y-values
-    points = []
-    for x_val in real_x_solutions:
-        # Evaluate the linear function L(x) = p*x + q
-        y_val = (p*x_val + q).evalf()
-        points.append((x_val, y_val))
+    return intersections
 
-    return points
-
-def calculate_salt_indicies(input_string):
+def calculate_intersection_points(input_string):
     '''cubic_constant = int(input("Cubic constant: "))
     squared_constant = int(input("Squared constant: "))
     linear_constant = int(input("Linear constant: "))
@@ -78,11 +62,15 @@ def calculate_salt_indicies(input_string):
     linear_intercept_function = f"l(x) = {linear_func_slope}x + {y_intercept_value}"
     print(linear_intercept_function)
 
-    intersection_points = find_linear_cubic_intersections_sympy(cubic_constant, squared_constant, linear_constant, zeroth_constant, linear_func_slope, y_intercept_value)
+    #intersection_points = find_linear_cubic_intersections_sympy(cubic_constant, squared_constant, linear_constant, zeroth_constant, linear_func_slope, y_intercept_value)
+    intersection_points = find_intersections_cubic_line(cubic_constant, squared_constant, linear_constant, zeroth_constant, linear_func_slope, y_intercept_value)
     print(intersection_points)
 
     y_values = [pt[1] for pt in intersection_points]
-    print(y_values)
+    for value in y_values:
+        print(value)
+
+    return y_values
 
 def convert_first_four_to_ascii(input_string):
     # Slice the first 4 characters
@@ -97,6 +85,20 @@ def convert_first_four_to_ascii(input_string):
     print("ASCII decimal equivalents:", ascii_values)
     return ascii_values
 
-my_string = input("Enter a string: ")
-calculate_salt_indicies(my_string)
+def calculate_salt_indicies(y_values):
+    index_1 = int(y_values[0]) % 10
+    index_2 = int(y_values[1]) % 10
+    index_3 = int(y_values[2]) % 10
+
+    salt_indicies = [index_1, index_2, index_3]
+    return salt_indicies
+
+
+    
+
+if __name__ == "__main__":
+    my_string = input("Enter a string: ")
+    intersection_y_values = calculate_intersection_points(my_string)
+    salt_indicies = calculate_salt_indicies(intersection_y_values)
+    print("Salt indexes: "+str(salt_indicies))
 
