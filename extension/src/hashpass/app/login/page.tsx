@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, Lock } from "@/components/login";
 
 export default function HashPassLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
+//   const router = useRouter();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,13 +18,11 @@ export default function HashPassLogin() {
 
     setError("");
 
-    if (password !== "test") {
-      setError("Invalid password. Please try again.");
-      return;
-    }
+    // router.push(chrome.runtime.getURL("dashboard/index.html"));
+    // router.push("/dashboard");
+    // window.location.href = chrome.runtime.getURL("dashboard/index.html");
+    window.open(chrome.runtime.getURL("dashboard/index.html"), "_self");
 
-    console.log("Login successful!");
-    router.push(chrome.runtime.getURL("dashboard"));
   };
 
   return (

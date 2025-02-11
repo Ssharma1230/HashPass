@@ -6,6 +6,6 @@
     "action": {
       "default_popup": "popup/index.html"
     },
-    "options_page": "login/index.html"
+    "options_page": "dashboard/index.html"
   }
   
