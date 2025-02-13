@@ -2,14 +2,14 @@
   "compilerOptions": {
     "target": "ES2017",
     "types": [
-        "jest"
+        "jest",
+        "chrome"
     ],
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "types": ["chrome"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
