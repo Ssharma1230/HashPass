@@ -14,11 +14,24 @@ describe('POST function', () => {
     });
 
     jest.spyOn(argon2, 'hash').mockResolvedValue('mocked_hash_value');
-    
+
     const response = await POST(mockRequest);
     const json = await response.json();
 
-    expect(argon2.hash).toHaveBeenCalledWith('test_password');
+    const actualCall = (argon2.hash as jest.Mock).mock.calls[0][1];
+
+    if (Buffer.isBuffer(actualCall.salt)) {
+      actualCall.salt = { data: Array.from(actualCall.salt), type: 'Buffer' };
+    }
+
+    expect(actualCall).toEqual({
+      memoryCost: 65536,
+      parallelism: 1,
+      salt: { data: [109, 121, 45, 115, 116, 97, 116, 105, 99, 45, 115, 97, 108, 116], type: 'Buffer' },
+      timeCost: 2,
+      type: 2,
+    });
+
     expect(json).toEqual({ hash: 'mocked_hash_value' });
   });
 });
