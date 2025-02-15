@@ -63,9 +63,9 @@ export default function PasswordGenerator() {
         const hashed_name = await hashText(enc_name);
         const hashed_email = await hashText(enc_email);
         const hashed_phone = await hashText(enc_phone);
-        const hashed_domain = await hashText(enc_phone);
+        const hashed_domain = await hashText(site_domain);
 
-        const salt_indicies = await CalculateSalts(inputValue); // For now input value will go into calculating salt indicies for testing. Will change to an internal value
+        const salt_indicies = await CalculateSalts(inputValue); // For now input value will go into calculating salt indicies for testing. Will change to an internal db value
 
         /*const salt1 = await hashText(securityAnswers[salt_indicies[0]])
         const salt2 = await hashText(securityAnswers[salt_indicies[1]])
@@ -76,7 +76,7 @@ export default function PasswordGenerator() {
 
         console.log(salt_indicies)
 
-        var arranged_string = hashed_name+salt2+hashed_phone+salt1+hashed_domain+salt3+hashed_email;
+        const arranged_string = hashed_name+salt2+hashed_phone+salt1+hashed_domain+salt3+hashed_email;
         const fullHash = await hashText(arranged_string)
         const extractedHash = extractHash(fullHash);
         console.log(fullHash)

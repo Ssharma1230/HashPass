@@ -1,4 +1,3 @@
-import HashingTestComponent from './security_components/hashing_test_component';
 import PasswordGenerator from './security_components/password_generator';
 
 export default function Home() {

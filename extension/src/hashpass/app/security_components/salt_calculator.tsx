@@ -15,16 +15,14 @@ function convertFirstFourToAscii(inputString: string): number[] {
 }
 
 function solveCubicEquation(a: number, b: number, c: number, d: number): number[] {
-    const polyCoeffs = [a, b, c, d];
-
     // Solve the cubic equation using math.js
     const roots = polynomialRoot(d,c,b,a);
 
     // Filter out non-real roots
-    return roots.filter((r: any) => typeof r === 'number');
+    return roots.filter((r) => typeof r === 'number');
 }
 
-function findIntersectionsCubicLine(a: number, b: number, c: number, d: number, p: number, q: number, tol: number = 1e-12): [number, number][] {
+function findIntersectionsCubicLine(a: number, b: number, c: number, d: number, p: number, q: number): [number, number][] {
     // Form the cubic equation: a*x^3 + b*x^2 + (c - p)*x + (d - q) = 0
     const roots = solveCubicEquation(a, b, c - p, d - q);
 
@@ -72,7 +70,7 @@ function calculateIntersectionPoints(inputString: string): number[] {
     const roots = solveQuadraticEquation(cubicDerivative, squaredDerivative, linearDerivative - linearFuncSlope);
     console.log("Roots of derivative equation:", roots);
 
-    let yInterceptRange: number[] = [];
+    const yInterceptRange: number[] = [];
     roots.forEach(root => {
         const evaluatedConstant = (cubicConstant * (root ** 3)) + (squaredConstant * (root ** 2)) + (linearConstant * root) + zerothConstant - (linearFuncSlope * root);
         yInterceptRange.push(evaluatedConstant);
