@@ -12,9 +12,8 @@ const observer = new MutationObserver((mutationsList, observer) => {
         "input[placeholder*='email'], input[placeholder*='username'], input[placeholder*='phone'], " +
         "input[type='tel'], input[type='number']"
     )].filter(input => {
-        // Ignore promotional/newsletter fields by checking if inside a login form
-        return input.closest("form") && /login|signin|account/i.test(input.closest("form").innerHTML);
-    });       
+        return input.closest("form") && /login|signin|sign-in|login|log-in|account/i.test(input.closest("form").innerHTML);
+    });
 
     if (signInFields.length > 0) {
         chrome.runtime.sendMessage({ action: "detected_login_form" });
