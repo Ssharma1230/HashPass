@@ -1,4 +1,4 @@
-import HashingTestComponent from '../hashing_test_component';
+import PasswordGenerator from './security_components/password_generator';
 
 export default function Home() {
   return (
@@ -6,7 +6,7 @@ export default function Home() {
       <h1 className="text-2xl font-bold">HashPassPOP</h1>
       <section className="mt-4 text-lg">Hello World!</section>
       <div>
-        <HashingTestComponent/>
+        <PasswordGenerator/>
       </div>
     </main>
   );
