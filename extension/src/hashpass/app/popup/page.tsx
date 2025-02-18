@@ -1,4 +1,4 @@
-import PasswordGenerator from './security_components/password_generator';
+import PasswordGenerator from '../security_components/password_generator';
 
 export default function Home() {
   return (
