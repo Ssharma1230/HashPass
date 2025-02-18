@@ -4,6 +4,7 @@
     "version": "1.0",
     "description": "A Chrome extension with React and Next.js",
     "permissions": ["storage", "scripting", "storage"],
+    "host_permissions": ["http://*/*", "https://*/*"],
     "background": {
       "service_worker": "service-worker.js"
     },
@@ -23,6 +24,9 @@
           "resources": ["dashboard/index.html"],
           "matches": ["<all_urls>"]
         }
-    ]
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+    }
 }
   
