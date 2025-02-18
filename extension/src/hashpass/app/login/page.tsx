@@ -1,15 +1,14 @@
-"use client";
-import { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle, Lock } from "@/components/login";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export default function HashPassLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const formRef = useRef<HTMLFormElement>(null); // Ref for form element
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleLogin = (e: Event) => {
-    e.preventDefault(); // Prevent default form submission
+  // Memoize handleLogin so it doesn't change on every render
+  const handleLogin = useCallback((e: Event) => {
+    e.preventDefault();
 
     if (!email || !password) {
       setError("Email and password are required");
@@ -18,11 +17,10 @@ export default function HashPassLogin() {
 
     setError("");
     alert("URL: " + chrome.runtime.getURL("dashboard/index.html"));
-  };
+  }, [email, password]); // Now it has stable dependencies
 
-  // Attach the event listener after the component mounts
   useEffect(() => {
-    const formElement = formRef.current; // Store current ref value
+    const formElement = formRef.current;
 
     if (formElement) {
       formElement.addEventListener("submit", handleLogin);
@@ -33,43 +31,24 @@ export default function HashPassLogin() {
         formElement.removeEventListener("submit", handleLogin);
       }
     };
-  }, [email, password]); // Dependencies remain the same
+  }, [handleLogin]); // Now handleLogin is properly included
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <Card>
-        <CardHeader>
-          <Lock className="w-10 h-10 text-gray-700" />
-          <CardTitle>HashPass Login</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <p className="text-sm text-gray-500">
-                Please enter your email and password to login to HashPass.
-            </p>
-        </CardContent>
-        <CardContent>
-          <form ref={formRef} className="space-y-4">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-              Login
-            </button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <form ref={formRef}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      <button type="submit">Login</button>
+      {error && <p>{error}</p>}
+    </form>
   );
 }
