@@ -1,3 +1,4 @@
+import EncDecTool from '../security_components/enc_dec_tool';
 import PasswordGenerator from '../security_components/password_generator';
 
 export default function Home() {
@@ -7,6 +8,9 @@ export default function Home() {
       <section className="mt-4 text-lg">Hello World!</section>
       <div>
         <PasswordGenerator/>
+      </div>
+      <div>
+        <EncDecTool/>
       </div>
     </main>
   );
