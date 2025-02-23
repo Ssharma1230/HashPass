@@ -101,6 +101,7 @@ export default function EncDecTool() {
             setDecryptedUserId(decoder.decode(decryptedBuffer));
         } catch (error) {
             alert("Decryption failed! Invalid key or corrupted data.");
+            console.error('Hash error:', error);
             setDecryptedUserId("");
         }
     }
