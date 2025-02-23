@@ -32,5 +32,18 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-#logging
+# logging
 build-log.txt
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform lock file
+.terraform.lock.hcl
+
+# Terraform cache directory
+.terraform/
+
+# Terraform plan output files
+*.tfplan
