@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
 
 export default function HashPassLogin() {
   const [email, setEmail] = useState("");
@@ -35,21 +36,27 @@ export default function HashPassLogin() {
   }, [handleLogin]); // Now handleLogin is properly included
 
   return (
-    <form ref={formRef}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Login</button>
-      {error && <p>{error}</p>}
-    </form>
+    <div>
+      <form ref={formRef}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button type="submit">Login</button>
+        {error && <p>{error}</p>}
+      </form>
+
+      <Link href="../popup/index.html">
+        <button>Home &gt;</button>
+      </Link>
+    </div>
   );
 }
