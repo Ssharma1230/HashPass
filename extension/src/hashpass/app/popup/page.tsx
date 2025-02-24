@@ -1,4 +1,6 @@
 import Link from "next/link";
+import EncDecTool from '../security_components/enc_dec_tool';
+import PasswordGenerator from '../security_components/password_generator';
 
 export default function Home() {
   return (
