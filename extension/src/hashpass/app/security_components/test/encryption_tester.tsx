@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { encrypt, decrypt } from './tools/AES_tool'
+import { encrypt, decrypt } from '../tools/AES_tool'
 
 export default function Encryption_Tester() {
     const [userId, setUserId] = useState("");

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { CalculateSalts } from './salt_calculator';
-import { hashText, extractHash } from './tools/hashing_tool';
+import { hashText, extractHash } from '../tools/hashing_tool';
 
 
 const securityAnswers: string[] = [

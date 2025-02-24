@@ -1,5 +1,5 @@
-import Encryption_Tester from '../security_components/encryption_tester';
-import PasswordGenerator from '../security_components/password_generator';
+import Encryption_Tester from '../security_components/test/encryption_tester';
+import PasswordGenerator from '../security_components/components/password_generator';
 
 export default function Home() {
   return (
