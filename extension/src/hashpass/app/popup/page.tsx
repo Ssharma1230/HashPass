@@ -1,4 +1,4 @@
-import EncDecTool from '../security_components/enc_dec_tool';
+import Encrypt_Decrypt_Tester from '../security_components/enc_dec_tool';
 import PasswordGenerator from '../security_components/password_generator';
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
         <PasswordGenerator/>
       </div>
       <div>
-        <EncDecTool/>
+        <Encrypt_Decrypt_Tester/>
       </div>
     </main>
   );
