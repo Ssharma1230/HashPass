@@ -13,6 +13,7 @@
   "dependencies": {
     "@types/chrome": "^0.0.302",
     "argon2": "^0.41.1",
+    "chrome": "^0.1.0",
     "mathjs": "^14.2.1",
     "next": "15.1.6",
     "react": "^19.0.0",

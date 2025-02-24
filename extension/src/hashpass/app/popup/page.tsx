@@ -10,6 +10,9 @@ export default function Home() {
           <button>Go to Login &gt;</button>
         </Link>
       </div>
+      <div>
+        <EncDecTool/>
+      </div>
     </main>
   );
 }
