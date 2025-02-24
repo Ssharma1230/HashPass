@@ -1,5 +1,5 @@
 import Link from "next/link";
-import EncDecTester from '../security_components/test/encryption_tester';
+import EncDecTester from '../security_components/enc_dec_tool';
 
 export default function Home() {
   return (
