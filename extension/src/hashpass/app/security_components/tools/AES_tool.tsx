@@ -22,7 +22,7 @@ export async function importKey(keyString: string): Promise<CryptoKey> {
     } catch (error) {
         console.error("Error importing key:", error);
 
-        // 🔹 Default key: Use a fallback 32-byte key (AES-256)
+        // Default key: Use a fallback 32-byte key (AES-256)
         const defaultKeyBytes = new Uint8Array(32).fill(0); // All zeros (change if needed)
 
         return await crypto.subtle.importKey(
