@@ -1,0 +1,9 @@
+{
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.147",
+        "typescript": "^5.7.3"
+    },
+    "dependencies": {
+        "cookie": "^1.0.2"
+    }
+}
