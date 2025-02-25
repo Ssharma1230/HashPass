@@ -1,5 +1,5 @@
 import Link from "next/link";
-import EncDecTester from '../security_components/enc_dec_tool';
+import EncDecTool from '../security_components/enc_dec_tool';
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
         </Link>
       </div>
       <div>
-        <EncDecTester/>
+        <EncDecTool/>
       </div>
     </main>
   );
