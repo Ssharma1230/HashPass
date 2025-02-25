@@ -1,6 +1,6 @@
 import { hashText, extractHash } from "./hashing_tool";
 
-export async function importKey(keyString: string): Promise<CryptoKey> {
+async function importKey(keyString: string): Promise<CryptoKey> {
     try {
         const hashedKeyString = await hashText(keyString);
         const extractedKeyStringHash = extractHash(hashedKeyString);
