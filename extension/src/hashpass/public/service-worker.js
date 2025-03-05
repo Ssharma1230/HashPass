@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((message) => {
             height: 600
         });
     }
-    else if (message.action === "detected_signup_form") {
+    if (message.action === "detected_signup_form") {
         chrome.windows.create({
             url: chrome.runtime.getURL("site_signup_popup/index.html"),
             type: "popup",
