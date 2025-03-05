@@ -85,9 +85,11 @@ const observer = new MutationObserver((mutationsList, observer) => {
   
     // If you only want to handle one form type at a time, use `if ... else if`
     if (signInFields.length > 0) {
+      console.log("Log in detected");
       chrome.runtime.sendMessage({ action: "detected_login_form" });
       observer.disconnect();  // optionally stop observing
     } else if (signUpFields.length > 0) {
+      console.log("Sign up detected");
       chrome.runtime.sendMessage({ action: "detected_signup_form" });
       observer.disconnect();  // optionally stop observing
     }
