@@ -1,5 +1,6 @@
 import Link from "next/link";
 import EncDecTool from '../security_components/enc_dec_tool';
+import PasswordGenerator from "../security_components/components/password_generator";
 
 export default function Home() {
   return (
@@ -10,6 +11,9 @@ export default function Home() {
       <Link href="/login/index.html">
           <button>Go to Login &gt;</button>
         </Link>
+      </div>
+      <div>
+        <PasswordGenerator/>
       </div>
       <div>
         <EncDecTool/>
