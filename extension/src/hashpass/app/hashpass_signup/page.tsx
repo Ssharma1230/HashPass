@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+//import { useRouter } from 'next/navigation';
 import { TextField, Button, Card, CardContent, Typography } from '@mui/material';
 
 const securityQuestions = [
@@ -18,7 +18,7 @@ const securityQuestions = [
 ];
 
 export default function SignUpPage() {
-  const router = useRouter();
+  //const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',

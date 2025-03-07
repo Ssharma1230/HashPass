@@ -3,7 +3,7 @@ import { createSSHTunnelAndConnect } from '../../utils/sshTunnel';
 
 export async function POST(req: Request) {
     try {
-      const { name, email, phone, securityAnswers, passphrase } = await req.json();
+      const { name, email, phone } = await req.json();
   
       console.log('Starting SSH Tunnel...');
       const connection = await createSSHTunnelAndConnect();
