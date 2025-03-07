@@ -1,10 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '../../../.env' });
 import { Client } from 'ssh2';
 import mysql from 'mysql2/promise';
 import fs from 'fs';
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
 
 export async function createSSHTunnelAndConnect() {
   return new Promise<mysql.Connection>((resolve, reject) => {
@@ -30,7 +28,7 @@ export async function createSSHTunnelAndConnect() {
             database: process.env.DB_NAME || '',
             stream,
           });
-
+          
           resolve(dbConnection);
         }
       );

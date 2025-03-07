@@ -40,16 +40,33 @@ export default function SignUpPage() {
     setFormData({ ...formData, securityAnswers: newAnswers });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.passphrase !== formData.confirmPassphrase) {
       setError('Passphrases do not match.');
       return;
     }
-    setError('');
-    console.log('Form submitted', formData);
-    router.push('/popup');
+    
+    try {
+      const res = await fetch('/api/user-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Sign-up failed');
+  
+      //router.push('/popup');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }    
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
