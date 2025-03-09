@@ -1,3 +1,48 @@
+// Function to inject a login popup into the page using the bundled TSX component
+function injectLoginPopup() {
+  const container = document.createElement('div');
+  container.id = 'hashpass-login-popup';
+  container.style.position = 'fixed';
+  container.style.top = '20%';
+  container.style.left = '50%';
+  container.style.transform = 'translateX(-50%)';
+  container.style.zIndex = '10000';
+  document.body.appendChild(container);
+
+  if (window.Components && typeof window.Components.renderSiteLogIn === 'function') {
+    window.Components.renderSiteLogIn(container);
+  } else {
+    console.error('Login component function not available.');
+  }
+}
+
+// Function to inject a signup popup into the page using the bundled TSX component
+function injectSignupPopup() {
+  const container = document.createElement('div');
+  container.id = 'hashpass-signup-popup';
+  container.style.position = 'fixed';
+  container.style.top = '20%';
+  container.style.left = '50%';
+  container.style.transform = 'translateX(-50%)';
+  container.style.zIndex = '10000';
+  document.body.appendChild(container);
+
+  if (window.Components && typeof window.Components.renderSiteSignUp === 'function') {
+    window.Components.renderSiteSignUp(container);
+  } else {
+    console.error('Signup component function not available.');
+  }
+}
+
+// Listen for messages from the service worker
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "injectLoginPopup") {
+    injectLoginPopup();
+  } else if (message.action === "injectSignupPopup") {
+    injectSignupPopup();
+  }
+});
+
 const observer = new MutationObserver((mutationsList, observer) => {
     /**
      * Detect Sign-In Fields
