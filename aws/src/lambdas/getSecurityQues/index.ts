@@ -12,9 +12,41 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
     console.log('EVENT: \n' + JSON.stringify(event, null, 2));
     console.log('CONTEXT: \n' + JSON.stringify(context, null));
 
-    const connection = await createConnection(dbConfig);
-    const [rows] = await connection.execute('SELECT * FROM UserInfo.sec_questions;');
-    console.log(rows);
+    let request_body;
+    try {
+        if (event.body) {
+            request_body = JSON.parse(event.body) 
+        } else {
+            console.log("No body found");
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: "No body found" })
+            };
+        }
+    } catch (error) {
+        console.error("Invalid JSON format", error);
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ message: "Invalid JSON format" }),
+        };
+    }
+
+    const uuid = request_body;
+    try {
+        const connection = await createConnection(dbConfig);
+        const [rows] = await connection.execute(
+            'SELECT * FROM UserInfo.sec_questions WHERE sec_questions.uuid = ?;', 
+            [uuid] // Pass the UUID as a parameter
+        );    
+        console.log(rows);
+        await connection.end();
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ message: "Error with DB" })
+        };
+    }
 
     return {
         statusCode: 200,

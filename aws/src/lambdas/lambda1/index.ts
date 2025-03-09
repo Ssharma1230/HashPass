@@ -34,7 +34,7 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
     const {uuid, enc_uuid, enc_questions} = request_body;
     try {
         const connection = await createConnection(dbConfig);
-        const query = `INSERT INTO your_table_name (uuid, enc_uuid, enc_question1, enc_question2, enc_question3, enc_question4, enc_question5, enc_question6, enc_question7, enc_question8, enc_question9, enc_question10) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+        const query = `INSERT INTO UserInfo.sec_questions (uuid, enc_uuid, enc_question1, enc_question2, enc_question3, enc_question4, enc_question5, enc_question6, enc_question7, enc_question8, enc_question9, enc_question10) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
         const values = [uuid, enc_uuid, ...enc_questions];
         await connection.execute(query, values);
         await connection.end();
