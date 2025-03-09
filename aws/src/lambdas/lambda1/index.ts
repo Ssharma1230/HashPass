@@ -17,13 +17,14 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
         if (event.body) {
             request_body = JSON.parse(event.body) 
         } else {
+            console.log("No body found");
             return {
                 statusCode: 400,
-                body: JSON.stringify({ message: "Invalid request" })
+                body: JSON.stringify({ message: "No body found" })
             };
         }
     } catch (error) {
-        console.error("Error parsing request body:", error);
+        console.error("Invalid JSON format", error);
         return {
             statusCode: 400,
             body: JSON.stringify({ message: "Invalid JSON format" }),
@@ -37,16 +38,17 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
         const values = [uuid, enc_uuid, ...enc_questions];
         await connection.execute(query, values);
         await connection.end();
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ message: "Success" })
-        };
     } catch (error) {
         console.error("Error inserting data:", error);
         return {
             statusCode: 400,
             body: JSON.stringify({ message: "Error with DB" })
         };
+    }
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Success" })
     }
 }; 
 
