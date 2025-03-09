@@ -1,12 +1,53 @@
 import { APIGatewayEvent, Context } from "aws-lambda";
+import { createConnection } from 'mysql2/promise';
+
+const dbConfig = {
+    host: process.env.DB_HOST, // RDS endpoint
+    user: process.env.DB_USER, // RDS username
+    password: process.env.DB_PASS, // RDS password
+    database: process.env.DB_NAME,
+};
 
 const handler = async (event: APIGatewayEvent, context: Context) => {
     console.log('EVENT: \n' + JSON.stringify(event, null, 2));
     console.log('CONTEXT: \n' + JSON.stringify(context, null));
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: "Success" })
-    };
+
+    let request_body;
+    try {
+        if (event.body) {
+            request_body = JSON.parse(event.body) 
+        } else {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: "Invalid request" })
+            };
+        }
+    } catch (error) {
+        console.error("Error parsing request body:", error);
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ message: "Invalid JSON format" }),
+        };
+    }
+
+    const {uuid, enc_uuid, enc_questions} = request_body;
+    try {
+        const connection = await createConnection(dbConfig);
+        const query = `INSERT INTO your_table_name (uuid, enc_uuid, enc_question1, enc_question2, enc_question3, enc_question4, enc_question5, enc_question6, enc_question7, enc_question8, enc_question9, enc_question10) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+        const values = [uuid, enc_uuid, ...enc_questions];
+        await connection.execute(query, values);
+        await connection.end();
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: "Success" })
+        };
+    } catch (error) {
+        console.error("Error inserting data:", error);
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ message: "Error with DB" })
+        };
+    }
 }; 
 
 module.exports = { handler };
