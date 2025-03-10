@@ -77,7 +77,7 @@ export default function PasswordGenerator() {
         <button onClick={handleGeneratePassword}>Generate Strong Password</button>
 
         <p>Current value: {inputValue}</p>
-        {strong_password && <p>Strong Password: {strong_password}</p>}
+        {/*strong_password && <p>Strong Password: {strong_password}</p>*/}
     </div>
 );
 }
