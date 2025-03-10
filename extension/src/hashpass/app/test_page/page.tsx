@@ -1,6 +1,4 @@
 "use client";
-import Decryption_Tester from "../security_components/decrypt_tester"
-import Encryption_Tester from "../security_components/enc_dec_tool";
 import PasswordGenerator from "../security_components/components/password_generator";
 
 export default function Home() {
