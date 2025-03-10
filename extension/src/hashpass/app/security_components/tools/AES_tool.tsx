@@ -71,7 +71,7 @@ export async function decrypt(encryptedData: string, keyString: string) : Promis
     const encryptedBytes = new Uint8Array(atob(rawEncryptedData).split("").map(char => char.charCodeAt(0)));
 
     console.log("Encrypted Data: "+rawEncryptedData);
-    console.log("Key String: "+keyString);
+    console.log("Key String: "+key);
     console.log("IV: "+iv);
 
     try {

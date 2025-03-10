@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
 
+  env: {
+    // This ensures that NEXT_PUBLIC_API_BASE_URL is replaced at build time.
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  },
+
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Exclude `ssh2` from the Webpack build for server-side code
@@ -20,6 +25,7 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+
 };
 
 export default nextConfig;

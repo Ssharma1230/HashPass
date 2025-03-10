@@ -1,6 +1,7 @@
 export const hashText = async (text: string): Promise<string> => {
     try {
-        const res = await fetch('/api/hash', {
+        //const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        const res = await fetch('http://localhost:3000/api/hash', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ textToHash: text }),
