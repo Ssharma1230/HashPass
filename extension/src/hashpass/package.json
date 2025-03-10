@@ -8,7 +8,7 @@
     "build": "(node build-log.js) && (mv build/_next build/next || move build/_next build/next)",
     "start": "next start",
     "test": "jest --passWithNoTests",
-    "lint": "echo 'Linting is disabled'"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
