@@ -21312,7 +21312,7 @@ var Components = (() => {
   // app/security_components/tools/hashing_tool.tsx
   var hashText = async (text) => {
     try {
-      const res = await fetch("/api/hash", {
+      const res = await fetch("http://localhost:3000/api/hash", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ textToHash: text })
@@ -21371,7 +21371,7 @@ var Components = (() => {
     const ivArray = new Uint8Array(atob(iv).split("").map((char) => char.charCodeAt(0)));
     const encryptedBytes = new Uint8Array(atob(rawEncryptedData).split("").map((char) => char.charCodeAt(0)));
     console.log("Encrypted Data: " + rawEncryptedData);
-    console.log("Key String: " + keyString);
+    console.log("Key String: " + key);
     console.log("IV: " + iv);
     try {
       const decryptedBuffer = await crypto.subtle.decrypt(
@@ -21393,9 +21393,11 @@ var Components = (() => {
     const [keyString, setKeyString] = (0, import_react2.useState)("");
     const [decryptedData, setDecryptedData] = (0, import_react2.useState)("");
     const handleSimplePassAuth = async () => {
+      console.log("userIdEncrypted: " + userIdEncrypted);
+      console.log("Key String: " + keyString);
       const decryptedText = await decrypt(userIdEncrypted, keyString);
       setDecryptedData(decryptedText);
-      console.log(decryptedData);
+      console.log("Decrypted Data: " + decryptedData);
       if (decryptedData === userId) {
         console.log("Valid Simple passphrase: User Authenticated");
       } else {

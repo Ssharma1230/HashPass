@@ -12,10 +12,12 @@ export default function Site_LogIn() {
     const [decryptedData, setDecryptedData] = useState("");
 
     const handleSimplePassAuth = async () => {
+        console.log("userIdEncrypted: "+userIdEncrypted)
+        console.log("Key String: "+ keyString)
         const decryptedText = await decrypt(userIdEncrypted, keyString);
         setDecryptedData(decryptedText)
 
-        console.log(decryptedData);
+        console.log("Decrypted Data: "+decryptedData);
 
         if(decryptedData === userId){
           console.log("Valid Simple passphrase: User Authenticated")
