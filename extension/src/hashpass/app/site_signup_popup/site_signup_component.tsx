@@ -1,3 +1,4 @@
+import React from 'react';
 import PasswordGenerator from "../security_components/components/password_generator"
 export default function Site_SignUp() {
     return (
