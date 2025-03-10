@@ -35,7 +35,7 @@ function injectSignupPopup() {
 }
 
 // Listen for messages from the service worker
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "injectLoginPopup") {
     injectLoginPopup();
   } else if (message.action === "injectSignupPopup") {
