@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-unused-vars */
+/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
