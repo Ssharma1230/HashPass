@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import { createRoot } from 'react-dom/client';
 import Site_LogIn from './site_login_popup/site_login_component';
 import Site_SignUp from './site_signup_popup/site_signup_component';
