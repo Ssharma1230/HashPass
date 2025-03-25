@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { TextField, Button, Card, CardContent, Typography } from '@mui/material';
 
 const securityQuestions = [
@@ -17,6 +18,7 @@ const securityQuestions = [
 ];
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -64,6 +66,8 @@ export default function SignUpPage() {
   
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Sign-up failed');
+      
+      router.push('/login'); // Redirect to login page after successful signup
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -105,4 +109,3 @@ export default function SignUpPage() {
     </div>
   );
 }
-
