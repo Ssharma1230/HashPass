@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createSSHTunnelAndConnect } from '../../utils/sshTunnel';
 import { encrypt } from '../../security_components/tools/AES_tool';
 import { v4 as uuidv4 } from 'uuid';
+import { RowDataPacket } from 'mysql2/promise';
 
 export async function POST(req: Request) {
     try {
@@ -11,14 +12,15 @@ export async function POST(req: Request) {
         const connection = await createSSHTunnelAndConnect();
 
         console.log('Checking if email exists...');
-        const [existingUser]: any = await connection.execute(
-            'SELECT COUNT(*) as count FROM users WHERE enc_email = ?',
-            [email]
+        const [rows] = await connection.execute<RowDataPacket[]>(
+          'SELECT COUNT(*) as count FROM users WHERE enc_email = ?',
+          [email]
         );
-
-        if (existingUser[0].count > 0) {
-            await connection.end();
-            return NextResponse.json({ error: 'Email already in use' }, { status: 400 });
+        
+        const existingUser = (rows as { count: number }[])[0]?.count ?? 0;
+        
+        if (existingUser > 0) {
+          return NextResponse.json({ error: 'Email already in use' }, { status: 400 });
         }
 
         console.log('Encrypting data...');
