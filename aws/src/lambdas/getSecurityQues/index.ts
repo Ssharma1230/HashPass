@@ -32,14 +32,18 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
     }
 
     const uuid = request_body;
+    const connection = await createConnection(dbConfig);; 
     try {
-        const connection = await createConnection(dbConfig);
         const [rows] = await connection.execute(
-            'SELECT * FROM UserInfo.sec_questions WHERE sec_questions.uuid = ?;', 
+            'SELECT * FROM sec_questions WHERE uuid = ?;', 
             [uuid] // Pass the UUID as a parameter
         );    
         console.log(rows);
         await connection.end();
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: rows })
+        }
     } catch (error) {
         console.error("Error fetching data:", error);
         return {
@@ -47,11 +51,6 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
             body: JSON.stringify({ message: "Error with DB" })
         };
     }
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: "Success" })
-    };
 };
 
 module.exports = { handler };
