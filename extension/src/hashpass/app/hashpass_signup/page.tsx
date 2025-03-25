@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-//import { useRouter } from 'next/navigation';
 import { TextField, Button, Card, CardContent, Typography } from '@mui/material';
 
 const securityQuestions = [
@@ -18,7 +17,6 @@ const securityQuestions = [
 ];
 
 export default function SignUpPage() {
-  //const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,7 +29,9 @@ export default function SignUpPage() {
   const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "phone" && !/^\d*$/.test(value)) return; // Ensure only numeric input for phone
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSecurityAnswerChange = (index: number, value: string) => {
@@ -40,10 +40,18 @@ export default function SignUpPage() {
     setFormData({ ...formData, securityAnswers: newAnswers });
   };
 
+  const validatePassphrase = (passphrase: string) => {
+    return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(passphrase);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.passphrase !== formData.confirmPassphrase) {
       setError('Passphrases do not match.');
+      return;
+    }
+    if (!validatePassphrase(formData.passphrase)) {
+      setError('Passphrase must be at least 8 characters long and include at least one letter, one number, and one special character.');
       return;
     }
     
@@ -56,8 +64,6 @@ export default function SignUpPage() {
   
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Sign-up failed');
-  
-      //router.push('/popup');
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -67,7 +73,6 @@ export default function SignUpPage() {
     }    
   };
   
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <Card sx={{ width: 400, padding: 3, boxShadow: 3, borderRadius: 2 }}>
@@ -100,3 +105,4 @@ export default function SignUpPage() {
     </div>
   );
 }
+
