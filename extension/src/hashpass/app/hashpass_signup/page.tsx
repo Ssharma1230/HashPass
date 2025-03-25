@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { TextField, Button, Card, CardContent, Typography, Box } from '@mui/material';
+import { TextField, Button, Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
 
 const securityQuestions = [
   "What is your favorite color?",
@@ -46,36 +46,50 @@ export default function SignUpPage() {
     return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(passphrase);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData.passphrase !== formData.confirmPassphrase) {
-      setError('Passphrases do not match.');
-      return;
-    }
-    if (!validatePassphrase(formData.passphrase)) {
-      setError('Passphrase must be at least 8 characters long and include at least one letter, one number, and one special character.');
-      return;
-    }
+  const [loading, setLoading] = useState(false); // Track loading state
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError('');
+  setLoading(true); // Start loading animation
+
+  if (formData.passphrase !== formData.confirmPassphrase) {
+    setError('Passphrases do not match.');
+    setLoading(false);
+    return;
+  }
+  if (!validatePassphrase(formData.passphrase)) {
+    setError('Passphrase must be at least 8 characters long and include at least one letter, one number, and one special character.');
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/user-signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
     
-    try {
-      const res = await fetch('/api/user-signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    if (!res.ok) {
+      throw new Error(data.error || 'Sign-up failed');
+    }
+
+    router.push('/login'); // Redirect to login page after successful signup
+  } catch (err) {
+    if (err instanceof Error) {
+      setError(err.message);
+    } else {
+      setError('An unexpected error occurred');
+    }
+  } finally {
+    setLoading(false); // Stop loading animation
+  }
+};
+
   
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Sign-up failed');
-      
-      router.push('/login'); // Redirect to login page after successful signup
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred');
-      }
-    }    
-  };
   
   return (
     <Box className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600" display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -102,7 +116,15 @@ export default function SignUpPage() {
             <TextField fullWidth margin="normal" label="Passphrase" name="passphrase" type="password" value={formData.passphrase} onChange={handleChange} required />
             <TextField fullWidth margin="normal" label="Confirm Passphrase" name="confirmPassphrase" type="password" value={formData.confirmPassphrase} onChange={handleChange} required />
             {error && <Typography color="error" variant="body2">{error}</Typography>}
-            <Button fullWidth variant="contained" type="submit" sx={{ marginTop: 3, bgcolor: 'primary.main', color: 'white', fontSize: 16, padding: 1.5 }}>Sign Up</Button>
+            <Button
+              fullWidth
+              variant="contained"
+              type="submit"
+              disabled={loading} // Disable button while loading
+              sx={{ marginTop: 3, bgcolor: 'primary.main', color: 'white', fontSize: 16, padding: 1.5 }}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Sign Up"}
+            </Button>
           </form>
         </CardContent>
       </Card>
