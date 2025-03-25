@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { TextField, Button, Card, CardContent, Typography } from '@mui/material';
+import { TextField, Button, Card, CardContent, Typography, Box } from '@mui/material';
 
 const securityQuestions = [
   "What is your favorite color?",
@@ -78,10 +78,10 @@ export default function SignUpPage() {
   };
   
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <Card sx={{ width: 400, padding: 3, boxShadow: 3, borderRadius: 2 }}>
+    <Box className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600" display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Card sx={{ width: 450, padding: 4, boxShadow: 5, borderRadius: 3, bgcolor: 'white' }}>
         <CardContent>
-          <Typography variant="h5" textAlign="center" gutterBottom>
+          <Typography variant="h4" textAlign="center" gutterBottom color="primary">
             Sign Up
           </Typography>
           <form onSubmit={handleSubmit}>
@@ -102,10 +102,10 @@ export default function SignUpPage() {
             <TextField fullWidth margin="normal" label="Passphrase" name="passphrase" type="password" value={formData.passphrase} onChange={handleChange} required />
             <TextField fullWidth margin="normal" label="Confirm Passphrase" name="confirmPassphrase" type="password" value={formData.confirmPassphrase} onChange={handleChange} required />
             {error && <Typography color="error" variant="body2">{error}</Typography>}
-            <Button fullWidth variant="contained" type="submit" sx={{ marginTop: 2 }}>Sign Up</Button>
+            <Button fullWidth variant="contained" type="submit" sx={{ marginTop: 3, bgcolor: 'primary.main', color: 'white', fontSize: 16, padding: 1.5 }}>Sign Up</Button>
           </form>
         </CardContent>
       </Card>
-    </div>
+    </Box>
   );
 }
