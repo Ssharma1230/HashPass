@@ -28,12 +28,15 @@ jobs:
       #     aws-region: us-east-1
 
       - name: Initialize Terraform
+        working-directory: terraform
         run: terraform init
 
       - name: Generate Terraform Plan
+        working-directory: terraform
         run: terraform plan -out="terraform.plan"
 
       - name: Upload Terraform Plan Artifact
+        working-directory: terraform
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
