@@ -33,7 +33,7 @@ jobs:
 
       - name: Generate Terraform Plan
         working-directory: aws/src/terraform
-        run: terraform plan -out="terraform.plan"
+        run: terraform plan -var="db_host=terraform-xyz.rds.amazonaws.com" -var="db_user=admin" -var="db_pass=mypassword" -var="db_name=mydb" -out=terraform.plan
 
       - name: Upload Terraform Plan Artifact
         uses: actions/upload-artifact@v4
