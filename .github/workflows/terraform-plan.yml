@@ -1,10 +1,10 @@
 name: Terraform Plan
 
+run-name: Terraform Plan Workflow
 on:
   push:
     branches:
-      - main  # Run whenever you push to the main branch
-  pull_request:
+      - "*"
 
 jobs:
   terraform:
