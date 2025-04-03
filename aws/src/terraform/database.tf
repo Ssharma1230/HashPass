@@ -8,5 +8,5 @@ resource "aws_db_instance" "RDS" {
   publicly_accessible     = false
   backup_retention_period = 7
   username                = "admin"
-  password                = var.db_password
+  password                = var.db_pass
 }
