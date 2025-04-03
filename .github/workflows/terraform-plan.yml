@@ -28,16 +28,16 @@ jobs:
       #     aws-region: us-east-1
 
       - name: Initialize Terraform
-        working-directory: terraform
+        working-directory: aws/src/terraform
         run: terraform init
 
       - name: Generate Terraform Plan
-        working-directory: terraform
+        working-directory: aws/src/terraform
         run: terraform plan -out="terraform.plan"
 
       - name: Upload Terraform Plan Artifact
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: terraform.plan
+          path: aws/src/terraform/terraform.plan
           retention-days: 7
