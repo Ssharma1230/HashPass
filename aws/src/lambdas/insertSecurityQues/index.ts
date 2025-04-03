@@ -31,6 +31,9 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
         };
     }
 
+    console.log("Request body:", request_body);
+    console.log("Process: ", process.env.DB_HOST, process.env.DB_USER, process.env.DB_NAME);
+
     const {uuid, enc_uuid, enc_questions} = request_body;
     try {
         const connection = await createConnection(dbConfig);
