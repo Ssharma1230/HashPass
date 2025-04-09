@@ -1,6 +1,7 @@
 "use client";
 import Decryption_Tester from "../security_components/decrypt_tester"
 import Encryption_Tester from "../security_components/enc_dec_tool";
+import HashTester from "../security_components/test/hashing_test_component"
 
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
         <section className="mt-4 text-lg">HashPass Testing Page</section>
         <Encryption_Tester/>
         <Decryption_Tester/>
+        <HashTester/>
       </>
     
     </main>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { hashText, extractHash } from "../../security_components/tools/hashing_tool";
 
 export default function MyTestComponent() {
   const [inputValue, setInputValue] = useState('');
@@ -14,18 +15,16 @@ export default function MyTestComponent() {
     if (!inputValue) return;
 
     try {
-      const res = await fetch('/api/hash', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ textToHash: inputValue }),
-      });
+      const returnedVal = await hashText(inputValue);
+      const extractedHashVal = extractHash(returnedVal);
 
-      const data = await res.json();
+      /*const data = await res.json();
       if (data.hash) {
         setHashValue(data.hash);
       } else {
         setHashValue('');
-      }
+      }*/
+     setHashValue(extractedHashVal)
     } catch (error) {
       console.error('Hash error:', error);
     }
