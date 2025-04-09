@@ -21,6 +21,18 @@ const nextConfig: NextConfig = {
         ...config.externals,
         'ssh2',  // Correctly add 'ssh2' to externals
       ];
+
+      // Enable async WebAssembly experiments
+      config.experiments = {
+        ...config.experiments,
+        asyncWebAssembly: true,
+      };
+
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+      };
     }
 
     return config;
