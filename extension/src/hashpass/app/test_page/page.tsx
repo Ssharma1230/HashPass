@@ -1,18 +1,13 @@
 "use client";
-import Decryption_Tester from "../security_components/decrypt_tester"
-import Encryption_Tester from "../security_components/enc_dec_tool";
-import HashTester from "../security_components/test/hashing_test_component"
-
+import PasswordGenerator from "../security_components/components/password_generator";
 
 export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-2xl font-bold">HashPass</h1>
+      <h1 className="text-2xl font-bold">HashPass Testing Env</h1>
       <>
-        <section className="mt-4 text-lg">HashPass Testing Page</section>
-        <Encryption_Tester/>
-        <Decryption_Tester/>
-        <HashTester/>
+        <section className="mt-4 text-lg">Password Generator</section>
+        <PasswordGenerator/>
       </>
     
     </main>
