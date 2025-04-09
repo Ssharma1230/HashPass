@@ -15,12 +15,22 @@ const handler = async (event: APIGatewayEvent, context: Context) => {
         });
         return {
           statusCode: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+          },
           body: JSON.stringify({ hash: hashValue }),
         };
       } catch (error) {
           console.error('Hashing error:', error);
         return {
           statusCode: 500,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+          },
           body: JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
         };
       }
