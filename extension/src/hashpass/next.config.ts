@@ -21,6 +21,28 @@ const nextConfig: NextConfig = {
         ...config.externals,
         'ssh2',  // Correctly add 'ssh2' to externals
       ];
+
+      // Enable async WebAssembly experiments
+      config.experiments = {
+        ...config.experiments,
+        asyncWebAssembly: true,
+      };
+
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+      };
+  
+      // Use asset/resource for .wasm files from argon2-browser
+      config.module.rules.push({
+        test: /\.wasm$/,
+        include: /argon2-browser/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/wasm/[hash][ext][query]',
+        },
+      });
     }
 
     return config;

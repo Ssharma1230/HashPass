@@ -1,17 +1,13 @@
+import { hashTextLocal } from './hashUtil';
+
 export const hashText = async (text: string): Promise<string> => {
     try {
-        //const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-        const res = await fetch('http://localhost:3000/api/hash', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ textToHash: text }),
-        });
-
-        const data = await res.json();
-        return data.hash || ''; // Return hash if available, otherwise return an empty string
+        // Directly use the local hashing function instead of making a fetch call.
+        const hash = await hashTextLocal(text);
+        return hash;
     } catch (error) {
         console.error('Hash error:', error);
-        return ''; // Return empty string in case of an error
+        return ''; // Return empty string in case of an error.
     }
 };
 

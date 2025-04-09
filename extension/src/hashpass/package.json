@@ -16,6 +16,7 @@
     "@mui/material": "^6.4.5",
     "@types/chrome": "^0.0.302",
     "argon2": "^0.41.1",
+    "argon2-browser": "^1.18.0",
     "chrome": "^0.1.0",
     "dotenv": "^16.4.7",
     "mathjs": "^14.2.1",
