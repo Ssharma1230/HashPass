@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
@@ -22214,9 +22215,7 @@ var Components = (() => {
       const hashObj = await (0, import_argon2_browser.hash)({
         pass: text,
         salt: "my-static-salt",
-        // For real security, consider using a unique random salt per input.
         type: 2,
-        // For argon2-browser, type "2" corresponds to argon2id.
         time: 2,
         mem: 65536,
         // Memory in KiB.
