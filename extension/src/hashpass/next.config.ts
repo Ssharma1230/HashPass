@@ -33,16 +33,6 @@ const nextConfig: NextConfig = {
         fs: false,
         path: false,
       };
-  
-      // Use asset/resource for .wasm files from argon2-browser
-      config.module.rules.push({
-        test: /\.wasm$/,
-        include: /argon2-browser/,
-        type: 'asset/resource',
-        generator: {
-          filename: 'static/wasm/[hash][ext][query]',
-        },
-      });
     }
 
     return config;

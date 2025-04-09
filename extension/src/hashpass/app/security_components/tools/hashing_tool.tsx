@@ -1,14 +1,16 @@
-import { hashTextLocal } from './hashUtil';
-
 export const hashText = async (text: string): Promise<string> => {
     try {
-        // Directly use the local hashing function instead of making a fetch call.
-        const hash = await hashTextLocal(text);
-        return hash;
-    } catch (error) {
+        const response = await fetch('https://tbkegmgwccq5iiea4tbk5fvmma0tfeya.lambda-url.us-east-1.on.aws/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ textToHash: text }),
+        });
+        const data = await response.json();
+        return data.hash || '';
+      } catch (error) {
         console.error('Hash error:', error);
         return ''; // Return empty string in case of an error.
-    }
+      }
 };
 
 export const extractHash = (input: string): string => {
