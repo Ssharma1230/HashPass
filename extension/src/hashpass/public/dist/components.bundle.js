@@ -21312,12 +21312,12 @@ var Components = (() => {
   // app/security_components/tools/hashing_tool.tsx
   var hashText = async (text) => {
     try {
-      const res = await fetch("http://localhost:3000/api/hash", {
+      const response = await fetch("https://tbkegmgwccq5iiea4tbk5fvmma0tfeya.lambda-url.us-east-1.on.aws/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ textToHash: text })
       });
-      const data = await res.json();
+      const data = await response.json();
       return data.hash || "";
     } catch (error) {
       console.error("Hash error:", error);
