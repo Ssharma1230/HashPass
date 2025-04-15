@@ -43,7 +43,8 @@ export default function SignUpPage() {
   };
 
   const validatePassphrase = (passphrase: string) => {
-    return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(passphrase);
+    const passphraseRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{10,}$/;
+    return passphraseRegex.test(passphrase);
   };
 
   const [loading, setLoading] = useState(false); // Track loading state
@@ -59,7 +60,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     return;
   }
   if (!validatePassphrase(formData.passphrase)) {
-    setError('Passphrase must be at least 8 characters long and include at least one letter, one number, and one special character.');
+    setError('Passphrase must be at least 12 characters long which include at least one uppercase letter, one number, and one special character.');
     setLoading(false);
     return;
   }
