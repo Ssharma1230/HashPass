@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: Password Manager API
+  description: API documentation for the backend powering the Chrome Extension
+  version: 1.0.0
+servers:
+  - url: https://your-api-id.execute-api.your-region.amazonaws.com/prod
+
+paths:
+  /API/hash:
+    post:
+      summary: Hashes a string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: string
+                  example: mypassword123
+      responses:
+        '200':
+          description: Hashed result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hash:
+                    type: string
+
+  /API/signup:
+    post:
+      summary: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                googleId:
+                  type: string
+      responses:
+        '200':
+          description: Account created
+        '400':
+          description: Unable to create account
+
+  /API/login:
+    post:
+      summary: Log in an existing user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '400':
+          description: Unable to login
+
+  /API/insertSecurityQuestions:
+    post:
+      summary: Add or update a user's security questions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                questions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      question:
+                        type: string
+                      answer:
+                        type: string
+      responses:
+        '200':
+          description: Questions added
+        '400':
+          description: Unable to add questions
+
+  /API/getSecurityQuestions:
+    get:
+      summary: Retrieve a user's security questions
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of security questions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questions:
+                    type: array
+                    items:
+                      type: string
