@@ -31,13 +31,13 @@ jobs:
         working-directory: aws/src/terraform
         run: terraform init
 
-      - name: Generate Terraform Plan
-        working-directory: aws/src/terraform
-        run: terraform plan -var="db_host=terraform-xyz.rds.amazonaws.com" -var="db_user=admin" -var="db_pass=mypassword" -var="db_name=mydb" -out=terraform.plan
+      # - name: Generate Terraform Plan
+      #   working-directory: aws/src/terraform
+      #   run: terraform plan -var="db_host=terraform-xyz.rds.amazonaws.com" -var="db_user=admin" -var="db_pass=mypassword" -var="db_name=mydb" -out=terraform.plan
 
-      - name: Upload Terraform Plan Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-plan
-          path: aws/src/terraform/terraform.plan
-          retention-days: 7
+      # - name: Upload Terraform Plan Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: terraform-plan
+      #     path: aws/src/terraform/terraform.plan
+      #     retention-days: 7
