@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
@@ -21308,103 +21307,19 @@ var Components = (() => {
   // app/site_login_popup/site_login_component.tsx
   var import_react = __toESM(require_react(), 1);
   var import_react2 = __toESM(require_react(), 1);
-
-  // app/security_components/tools/hashing_tool.tsx
-  var hashText = async (text) => {
-    try {
-      const response = await fetch("https://tbkegmgwccq5iiea4tbk5fvmma0tfeya.lambda-url.us-east-1.on.aws/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ textToHash: text })
-      });
-      const data = await response.json();
-      return data.hash || "";
-    } catch (error) {
-      console.error("Hash error:", error);
-      return "";
-    }
-  };
-  var extractHash = (input) => {
-    const parts = input.split("$");
-    if (parts.length > 3) {
-      return parts.slice(4).join("$");
-    }
-    return "";
-  };
-
-  // app/security_components/tools/AES_tool.tsx
-  async function importKey(keyString) {
-    try {
-      const hashedKeyString = await hashText(keyString);
-      const extractedKeyStringHash = extractHash(hashedKeyString);
-      const keyBytes = new Uint8Array(extractedKeyStringHash.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
-      if (keyBytes.length !== 16 && keyBytes.length !== 32) {
-        throw new Error("Invalid key length! Must be 16 or 32 bytes.");
-      }
-      return await crypto.subtle.importKey(
-        "raw",
-        keyBytes,
-        { name: "AES-GCM" },
-        false,
-        ["encrypt", "decrypt"]
-      );
-    } catch (error) {
-      console.error("Error importing key:", error);
-      const defaultKeyBytes = new Uint8Array(32).fill(0);
-      return await crypto.subtle.importKey(
-        "raw",
-        defaultKeyBytes,
-        { name: "AES-GCM" },
-        false,
-        ["encrypt", "decrypt"]
-      );
-    }
-  }
-  async function decrypt(encryptedData, keyString) {
-    if (!encryptedData || !keyString) {
-      return "";
-    }
-    const iv = encryptedData.slice(0, 16);
-    const rawEncryptedData = encryptedData.slice(16, encryptedData.length);
-    const decoder = new TextDecoder();
-    const key = await importKey(keyString);
-    const ivArray = new Uint8Array(atob(iv).split("").map((char) => char.charCodeAt(0)));
-    const encryptedBytes = new Uint8Array(atob(rawEncryptedData).split("").map((char) => char.charCodeAt(0)));
-    console.log("Encrypted Data: " + rawEncryptedData);
-    console.log("Key String: " + key);
-    console.log("IV: " + iv);
-    try {
-      const decryptedBuffer = await crypto.subtle.decrypt(
-        { name: "AES-GCM", iv: ivArray },
-        key,
-        encryptedBytes
-      );
-      return decoder.decode(decryptedBuffer);
-    } catch (error) {
-      console.error("Decryption failed! Invalid key or corrupted data.", error);
-      return "";
-    }
-  }
-
-  // app/site_login_popup/site_login_component.tsx
   function Site_LogIn() {
-    const userId = "testuserid";
-    const userIdEncrypted = "RN5Oag4zBlVIwNS1NBCatXezzn3t/aLR8mn28t2sE/TBp0hpYtU=";
     const [keyString, setKeyString] = (0, import_react2.useState)("");
-    const [decryptedData, setDecryptedData] = (0, import_react2.useState)("");
-    const handleSimplePassAuth = async () => {
-      console.log("userIdEncrypted: " + userIdEncrypted);
+    const handlePassEntry = async () => {
+      console.log("Generate password button clicked");
       console.log("Key String: " + keyString);
-      const decryptedText = await decrypt(userIdEncrypted, keyString);
-      setDecryptedData(decryptedText);
-      console.log("Decrypted Data: " + decryptedData);
-      if (decryptedData === userId) {
-        console.log("Valid Simple passphrase: User Authenticated");
-      } else {
-        console.log("Invalid Simple Passphrase");
-      }
+      chrome.runtime.sendMessage({
+        action: "fillPassword",
+        passphrase: keyString
+      }, (response) => {
+        console.log("Message acknowledged by service worker", response);
+      });
     };
-    return /* @__PURE__ */ import_react.default.createElement("div", { className: "max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-xl font-bold mb-4" }, "Enter Simple Passphrase to log-in to site"), /* @__PURE__ */ import_react.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react.default.createElement(
+    return /* @__PURE__ */ import_react.default.createElement("div", { className: "max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-xl font-bold mb-4" }, "Enter Simple Passphrase to log in to site"), /* @__PURE__ */ import_react.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react.default.createElement(
       "input",
       {
         type: "text",
@@ -21416,10 +21331,10 @@ var Components = (() => {
     ), /* @__PURE__ */ import_react.default.createElement(
       "button",
       {
-        onClick: handleSimplePassAuth,
+        onClick: handlePassEntry,
         className: "w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
       },
-      "Encrypt User ID"
+      "Generate Password"
     ));
   }
 
@@ -65105,6 +65020,29 @@ var Components = (() => {
     return salt_indicies;
   };
 
+  // app/security_components/tools/hashing_tool.tsx
+  var hashText = async (text) => {
+    try {
+      const response = await fetch("https://tbkegmgwccq5iiea4tbk5fvmma0tfeya.lambda-url.us-east-1.on.aws/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ textToHash: text })
+      });
+      const data = await response.json();
+      return data.hash || "";
+    } catch (error) {
+      console.error("Hash error:", error);
+      return "";
+    }
+  };
+  var extractHash = (input) => {
+    const parts = input.split("$");
+    if (parts.length > 3) {
+      return parts.slice(4).join("$");
+    }
+    return "";
+  };
+
   // app/security_components/components/password_generator.tsx
   var securityAnswers = [
     "Fluffy",
@@ -65134,7 +65072,6 @@ var Components = (() => {
     const enc_phone = "5555555555";
     const site_domain = "amazon.com";
     const [inputValue, setInputValue] = (0, import_react3.useState)("");
-    const [strong_password, setStrongPasswordText] = (0, import_react3.useState)("");
     const handleInputChange = (e3) => {
       setInputValue(e3.target.value);
     };
@@ -65154,7 +65091,6 @@ var Components = (() => {
       const extractedHash = extractHash(fullHash);
       console.log(fullHash);
       console.log(extractedHash);
-      setStrongPasswordText(extractedHash);
     };
     return /* @__PURE__ */ import_react3.default.createElement("div", { style: { padding: "1rem" } }, /* @__PURE__ */ import_react3.default.createElement("label", { htmlFor: "my-input" }, "Enter something:"), /* @__PURE__ */ import_react3.default.createElement(
       "input",
@@ -65165,7 +65101,7 @@ var Components = (() => {
         onChange: handleInputChange,
         style: { marginLeft: "0.5rem" }
       }
-    ), /* @__PURE__ */ import_react3.default.createElement("button", { onClick: handleGeneratePassword }, "Generate Strong Password"), /* @__PURE__ */ import_react3.default.createElement("p", null, "Current value: ", inputValue), strong_password && /* @__PURE__ */ import_react3.default.createElement("p", null, "Strong Password: ", strong_password));
+    ), /* @__PURE__ */ import_react3.default.createElement("button", { onClick: handleGeneratePassword }, "Generate Strong Password"), /* @__PURE__ */ import_react3.default.createElement("p", null, "Current value: ", inputValue));
   }
 
   // app/site_signup_popup/site_signup_component.tsx
