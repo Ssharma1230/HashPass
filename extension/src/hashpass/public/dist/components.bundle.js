@@ -21312,7 +21312,7 @@ var Components = (() => {
   // app/security_components/tools/hashing_tool.tsx
   var hashText = async (text) => {
     try {
-      const response = await fetch("https://tbkegmgwccq5iiea4tbk5fvmma0tfeya.lambda-url.us-east-1.on.aws/", {
+      const response = await fetch("https://oawbglgv44.execute-api.us-east-1.amazonaws.com/dev/calc_hash", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ textToHash: text })
