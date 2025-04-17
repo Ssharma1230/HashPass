@@ -47,3 +47,7 @@ terraform.tfstate.backup
 
 # Terraform plan output files
 *.tfplan
+
+# Terraform variable files
+*.tfvars
+*.plan

@@ -1,0 +1,9 @@
+{
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.147",
+        "typescript": "^5.7.3"
+    },
+    "dependencies": {
+        "mysql2": "^3.13.0"
+    }
+}
