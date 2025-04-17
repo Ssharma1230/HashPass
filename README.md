@@ -1,6 +1,18 @@
-# HashPass 
+# HashPass
 
-HashPass is a password manager that is built as a Google Chrome extension. 
+HashPass is a password manager that is built as a Google Chrome extension. It helps users generate strong passwords directly in the browser, ensuring strong protection without password storage.
+
+## What HashPass Does
+
+HashPass detects when a password input field appears on any website. Once detected, it prompts users to generate a secure password using a hashing algorithm powered by encrypted salts. These passwords are never stored and are generated in real-time for each login session. The extension also provides an option to disable its functionality on specific sites.
+
+## Why HashPass Is Useful
+
+Traditional password managers store user passwords, making them potential targets for attacks. HashPass avoids this risk by never storing passwords at all. With real-time generation and high-entropy security, users get strong protection against breaches while maintaining ease of use. The Chrome extension format also ensures a seamless browsing experience.
+
+## How To Get Started with HashPass
+
+The extension can be found in the Google Chrome Web Store.
 
 ## Baseline Requirements
 
@@ -14,8 +26,10 @@ HashPass is a password manager that is built as a Google Chrome extension.
 
 5. The passwords must never be saved, they will always be computed in live time within a 15 second window any time a sign in is required. The algorithm decrypts the encrypted salts which are stored and uses those to compute the hash.
 
-## Contributers
+## Who Contributes to the Project
 
-Shivam Sharma
-Samarth Girish
-Xavier Callait
+This project is maintained and developed by:
+
+- Xavier Callait
+- Shivam Sharma  
+- Samarth Girish
