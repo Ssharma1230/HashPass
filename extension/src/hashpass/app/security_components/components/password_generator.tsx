@@ -27,7 +27,7 @@ export default function PasswordGenerator() {
     const site_domain = "amazon.com"
 
     const [inputValue, setInputValue] = useState('');
-    //const [strong_password, setStrongPasswordText] = useState('');
+    const [strong_password, setStrongPasswordText] = useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -58,7 +58,7 @@ export default function PasswordGenerator() {
         console.log(fullHash)
         console.log(extractedHash)
 
-        //setStrongPasswordText(extractedHash);
+        setStrongPasswordText(extractedHash);
 
     
     };
@@ -77,7 +77,7 @@ export default function PasswordGenerator() {
         <button onClick={handleGeneratePassword}>Generate Strong Password</button>
 
         <p>Current value: {inputValue}</p>
-        {/*strong_password && <p>Strong Password: {strong_password}</p>*/}
+        {strong_password && <p>Strong Password: {strong_password}</p>}
     </div>
 );
 }
