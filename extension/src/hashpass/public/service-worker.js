@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
         console.log("No active tab ID found.");
       }
     });
-    //return true;
+    return true;
   }
   
   // Check that sender.tab exists so we can target the correct tab

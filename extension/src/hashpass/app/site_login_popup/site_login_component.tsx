@@ -1,20 +1,33 @@
 'use client';
 import React from 'react';
 import { useState } from "react";
+import { decrypt } from "../security_components/tools/AES_tool"
 
 export default function Site_LogIn() {
     const [keyString, setKeyString] = useState("");
+    const userId = "test"
+    const userIdEncrypted = "9YKLiGuQVMgFlGlvOYcxeeGv2LlmjCF32sAC4iYe59k="
 
     const handlePassEntry = async () => {
       console.log("Generate password button clicked");
       console.log("Key String: " + keyString);
-    
-      chrome.runtime.sendMessage({
-        action: "fillPassword",
-        passphrase: keyString
-      }, (response) => {
-        console.log("Message acknowledged by service worker", response);
-      });
+      console.log("userIdEncrypted: " + userIdEncrypted)
+
+      const decryptedText = await decrypt(userIdEncrypted, keyString);
+      console.log("Decrypted Data: " + decryptedText);
+
+      if(decryptedText === userId){
+        console.log("Valid Simple passphrase: User Authenticated")
+        chrome.runtime.sendMessage({
+          action: "fillPassword",
+          passphrase: userId
+        }, (response) => {
+          console.log("Message acknowledged by service worker", response);
+        });
+      }
+      else{
+        console.log("Invalid Simple Passphrase")
+      }
     };
     
     
