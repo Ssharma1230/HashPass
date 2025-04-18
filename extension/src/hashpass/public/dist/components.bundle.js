@@ -21388,23 +21388,28 @@ var Components = (() => {
 
   // app/site_login_popup/site_login_component.tsx
   function Site_LogIn() {
-    const userId = "testuserid";
-    const userIdEncrypted = "RN5Oag4zBlVIwNS1NBCatXezzn3t/aLR8mn28t2sE/TBp0hpYtU=";
     const [keyString, setKeyString] = (0, import_react2.useState)("");
-    const [decryptedData, setDecryptedData] = (0, import_react2.useState)("");
-    const handleSimplePassAuth = async () => {
-      console.log("userIdEncrypted: " + userIdEncrypted);
+    const userId = "test";
+    const userIdEncrypted = "9YKLiGuQVMgFlGlvOYcxeeGv2LlmjCF32sAC4iYe59k=";
+    const handlePassEntry = async () => {
+      console.log("Generate password button clicked");
       console.log("Key String: " + keyString);
+      console.log("userIdEncrypted: " + userIdEncrypted);
       const decryptedText = await decrypt(userIdEncrypted, keyString);
-      setDecryptedData(decryptedText);
-      console.log("Decrypted Data: " + decryptedData);
-      if (decryptedData === userId) {
+      console.log("Decrypted Data: " + decryptedText);
+      if (decryptedText === userId) {
         console.log("Valid Simple passphrase: User Authenticated");
+        chrome.runtime.sendMessage({
+          action: "fillPassword",
+          passphrase: userId
+        }, (response) => {
+          console.log("Message acknowledged by service worker", response);
+        });
       } else {
         console.log("Invalid Simple Passphrase");
       }
     };
-    return /* @__PURE__ */ import_react.default.createElement("div", { className: "max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-xl font-bold mb-4" }, "Enter Simple Passphrase to log-in to site"), /* @__PURE__ */ import_react.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react.default.createElement(
+    return /* @__PURE__ */ import_react.default.createElement("div", { className: "max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-xl font-bold mb-4" }, "Enter Simple Passphrase to log in to site"), /* @__PURE__ */ import_react.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react.default.createElement(
       "input",
       {
         type: "text",
@@ -21416,10 +21421,10 @@ var Components = (() => {
     ), /* @__PURE__ */ import_react.default.createElement(
       "button",
       {
-        onClick: handleSimplePassAuth,
+        onClick: handlePassEntry,
         className: "w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
       },
-      "Encrypt User ID"
+      "Generate Password"
     ));
   }
 
