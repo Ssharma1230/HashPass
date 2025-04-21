@@ -2,9 +2,11 @@ import { hashText, extractHash } from "./hashing_tool";
 
 async function importKey(keyString: string): Promise<CryptoKey> {
     try {
+        console.log("Client side import key text to be hashed (keyString): ",keyString)
         const hashedKeyString = await hashText(keyString);
+        console.log("Client side import key hashed text: ",hashedKeyString)
         const extractedKeyStringHash = extractHash(hashedKeyString);
-
+        console.log(extractedKeyStringHash);
         const keyBytes = new Uint8Array(extractedKeyStringHash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))); // Assuming hex encoding
 
         // Ensure key length is 16 or 32 bytes for AES

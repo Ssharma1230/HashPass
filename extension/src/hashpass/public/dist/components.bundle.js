@@ -21335,8 +21335,11 @@ var Components = (() => {
   // app/security_components/tools/AES_tool.tsx
   async function importKey(keyString) {
     try {
+      console.log("Client side import key text to be hashed (keyString): ", keyString);
       const hashedKeyString = await hashText(keyString);
+      console.log("Client side import key hashed text: ", hashedKeyString);
       const extractedKeyStringHash = extractHash(hashedKeyString);
+      console.log(extractedKeyStringHash);
       const keyBytes = new Uint8Array(extractedKeyStringHash.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
       if (keyBytes.length !== 16 && keyBytes.length !== 32) {
         throw new Error("Invalid key length! Must be 16 or 32 bytes.");
@@ -65133,33 +65136,42 @@ var Components = (() => {
     "Beethoven"
     // Answer to: "What is your favorite composer or musician?"
   ];
-  function PasswordGenerator() {
+  async function calculatePassword(inputValue) {
+    if (!inputValue) return;
     const enc_name = "Name";
     const enc_email = "name@gmail.com";
     const enc_phone = "5555555555";
     const site_domain = "amazon.com";
+    const hashed_name = await hashText(enc_name);
+    const hashed_email = await hashText(enc_email);
+    const hashed_phone = await hashText(enc_phone);
+    const hashed_domain = await hashText(site_domain);
+    const salt_indicies = await CalculateSalts(inputValue);
+    const salt1 = securityAnswers[salt_indicies[0]];
+    const salt2 = securityAnswers[salt_indicies[1]];
+    const salt3 = securityAnswers[salt_indicies[2]];
+    console.log(salt_indicies);
+    const arranged_string = hashed_name + salt2 + hashed_phone + salt1 + hashed_domain + salt3 + hashed_email;
+    const fullHash = await hashText(arranged_string);
+    const extractedHash = extractHash(fullHash);
+    console.log(fullHash);
+    console.log(extractedHash);
+    return extractHash;
+  }
+  function PasswordGenerator() {
     const [inputValue, setInputValue] = (0, import_react3.useState)("");
     const [strong_password, setStrongPasswordText] = (0, import_react3.useState)("");
     const handleInputChange = (e3) => {
       setInputValue(e3.target.value);
     };
     const handleGeneratePassword = async () => {
-      if (!inputValue) return;
-      const hashed_name = await hashText(enc_name);
-      const hashed_email = await hashText(enc_email);
-      const hashed_phone = await hashText(enc_phone);
-      const hashed_domain = await hashText(site_domain);
-      const salt_indicies = await CalculateSalts(inputValue);
-      const salt1 = securityAnswers[salt_indicies[0]];
-      const salt2 = securityAnswers[salt_indicies[1]];
-      const salt3 = securityAnswers[salt_indicies[2]];
-      console.log(salt_indicies);
-      const arranged_string = hashed_name + salt2 + hashed_phone + salt1 + hashed_domain + salt3 + hashed_email;
-      const fullHash = await hashText(arranged_string);
-      const extractedHash = extractHash(fullHash);
-      console.log(fullHash);
-      console.log(extractedHash);
-      setStrongPasswordText(extractedHash);
+      const strongPasswordFn = await calculatePassword(inputValue);
+      if (!strongPasswordFn) {
+        console.error("Password generator was undefined\u2014cannot proceed");
+        return;
+      }
+      const strong_password2 = strongPasswordFn(inputValue);
+      setStrongPasswordText(strong_password2);
     };
     return /* @__PURE__ */ import_react3.default.createElement("div", { style: { padding: "1rem" } }, /* @__PURE__ */ import_react3.default.createElement("label", { htmlFor: "my-input" }, "Enter something:"), /* @__PURE__ */ import_react3.default.createElement(
       "input",
