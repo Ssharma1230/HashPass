@@ -7,28 +7,19 @@ chrome.runtime.onMessage.addListener((message, sender) => {
         console.log("Valid tab ID found:", tab.id);
         try {
           console.log("Attempting to inject script into tab", tab.id);
+          
           chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: (passphrase) => {
-              console.log("Injected script executing on the page");
-              const emailInput = document.querySelector('input[type="email"]');
-              if (emailInput) {
-                console.log("Email input field found. Setting value.");
-                emailInput.value = passphrase;
-              } else {
-                console.log("No email input field found on the page.");
-                alert('No email field found on the page.');
-              }
-            },
-            args: [message.passphrase]
-          }).then(() => {
-            console.log("Script injection completed successfully.");
-          }).catch(err => {
-            console.log("Script injection failed:", err);
-          });
+            target: { tabId: tab.id, allFrames: true },
+            world:  "MAIN",
+            func:   injectPassword,
+            args:   [message.passphrase],
+          })
+          .then(() => console.log("Injection done"))
+          .catch(e => console.error("Injection error", e));
         } catch (e) {
           console.log("Unexpected error during script injection:", e);
         }
+       
       } else {
         console.log("No active tab ID found.");
       }
@@ -45,3 +36,32 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     chrome.tabs.sendMessage(sender.tab.id, { action: "injectSignupPopup" });
   }
 }); 
+
+function injectPassword(passphrase) {
+  const attempt = () => {
+    const input = document.querySelector('input[type="password"]');
+    if (!input) {
+      console.log("⏳ password input not yet mounted, retrying…");
+      return setTimeout(attempt, 300);
+    }
+
+    console.log("found password input");
+
+    // Grab the native setter once:
+    const setter = Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype, 'value'
+    ).set;
+
+    // Call it to bypass React’s override:
+    setter.call(input, passphrase);
+
+    // Dispatch events so React/Formik/etc hears the change:
+    ['input','change','keydown','keyup','blur'].forEach(evtName => {
+      input.dispatchEvent(new Event(evtName, { bubbles: true }));
+    });
+
+    console.log("final input.value:", input.value);
+  };
+
+  attempt();
+}

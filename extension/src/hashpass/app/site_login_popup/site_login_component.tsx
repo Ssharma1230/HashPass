@@ -2,11 +2,15 @@
 import React from 'react';
 import { useState } from "react";
 import { decrypt } from "../security_components/tools/AES_tool"
+import {calculatePassword} from '../security_components/components/password_generator';
 
 export default function Site_LogIn() {
+    const userId = "testuserid2" // This value will be the user's id in plaintext (retrieved from DB)
+    const userIdEncrypted = "HCxyVsfCvxXKyw/rMRpuTJv99PHUrIZhJHICv4zgkMTHXBtgHJi2" // This value will be the user's id in ciphertext (retrieved from DB)
+    //valid simple pass for testing is testkey
+
     const [keyString, setKeyString] = useState("");
-    const userId = "test"
-    const userIdEncrypted = "9YKLiGuQVMgFlGlvOYcxeeGv2LlmjCF32sAC4iYe59k="
+    //const [decryptedData, setDecryptedData] = useState("");
 
     const handlePassEntry = async () => {
       console.log("Generate password button clicked");
@@ -18,9 +22,12 @@ export default function Site_LogIn() {
 
       if(decryptedText === userId){
         console.log("Valid Simple passphrase: User Authenticated")
+        const password = await calculatePassword(keyString);
+        console.log("Password String: ",password)
+
         chrome.runtime.sendMessage({
           action: "fillPassword",
-          passphrase: userId
+          passphrase: password
         }, (response) => {
           console.log("Message acknowledged by service worker", response);
         });
@@ -46,7 +53,7 @@ export default function Site_LogIn() {
           <button
             onClick={handlePassEntry}
             className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
-            Generate Password
+            Generate Password to Login
           </button>
         </div>
       );

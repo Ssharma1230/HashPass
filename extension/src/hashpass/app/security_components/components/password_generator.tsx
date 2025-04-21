@@ -18,8 +18,9 @@ const securityAnswers: string[] = [
     "Beethoven", // Answer to: "What is your favorite composer or musician?"
 ];
 
-export async function calculatePassword(inputValue:string){
-    if (!inputValue) return;
+
+export async function calculatePassword(inputValue: string) : Promise<string>{
+    //if (!inputValue) return;
 
     const enc_name = "Name";
     const enc_email = "name@gmail.com"
@@ -48,7 +49,7 @@ export async function calculatePassword(inputValue:string){
     console.log(fullHash)
     console.log(extractedHash)
 
-    return extractHash;
+    return extractedHash;
 }
 
 
@@ -64,15 +65,8 @@ export default function PasswordGenerator() {
 
     const handleGeneratePassword = async () => {
         
-        const strongPasswordFn = await calculatePassword(inputValue);
-
-        if (!strongPasswordFn) {
-            console.error("Password generator was undefined—cannot proceed");
-            return;
-        }
-
-        const strong_password = strongPasswordFn(inputValue);
-        setStrongPasswordText(strong_password);
+        const strongPassword = await calculatePassword(inputValue);
+        setStrongPasswordText(strongPassword);
 
     
     };
