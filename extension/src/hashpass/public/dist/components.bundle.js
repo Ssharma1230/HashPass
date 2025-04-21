@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
@@ -21302,7 +21301,7 @@ var Components = (() => {
     renderSiteLogIn: () => renderSiteLogIn,
     renderSiteSignUp: () => renderSiteSignUp
   });
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react6 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // app/site_login_popup/site_login_component.tsx
@@ -65112,27 +65111,6 @@ var Components = (() => {
     console.log(extractedHash);
     return extractedHash;
   }
-  function PasswordGenerator() {
-    const [inputValue, setInputValue] = (0, import_react.useState)("");
-    const [strong_password, setStrongPasswordText] = (0, import_react.useState)("");
-    const handleInputChange = (e3) => {
-      setInputValue(e3.target.value);
-    };
-    const handleGeneratePassword = async () => {
-      const strongPassword = await calculatePassword(inputValue);
-      setStrongPasswordText(strongPassword);
-    };
-    return /* @__PURE__ */ import_react.default.createElement("div", { style: { padding: "1rem" } }, /* @__PURE__ */ import_react.default.createElement("label", { htmlFor: "my-input" }, "Enter something:"), /* @__PURE__ */ import_react.default.createElement(
-      "input",
-      {
-        id: "my-input",
-        type: "text",
-        value: inputValue,
-        onChange: handleInputChange,
-        style: { marginLeft: "0.5rem" }
-      }
-    ), /* @__PURE__ */ import_react.default.createElement("button", { onClick: handleGeneratePassword }, "Generate Strong Password"), /* @__PURE__ */ import_react.default.createElement("p", null, "Current value: ", inputValue), strong_password && /* @__PURE__ */ import_react.default.createElement("p", null, "Strong Password: ", strong_password));
-  }
 
   // app/site_login_popup/site_login_component.tsx
   function Site_LogIn() {
@@ -65180,8 +65158,48 @@ var Components = (() => {
 
   // app/site_signup_popup/site_signup_component.tsx
   var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   function Site_SignUp() {
-    return /* @__PURE__ */ import_react4.default.createElement("div", { className: "w-64 p-4 bg-white shadow-lg rounded-lg text-center" }, /* @__PURE__ */ import_react4.default.createElement("h2", { className: "text-lg font-semibold mb-2" }, "Sign Up"), /* @__PURE__ */ import_react4.default.createElement("p", { className: "text-sm text-gray-600 mb-4" }, "Click the button to generate a secure password"), /* @__PURE__ */ import_react4.default.createElement(PasswordGenerator, null));
+    const userId = "testuserid2";
+    const userIdEncrypted = "HCxyVsfCvxXKyw/rMRpuTJv99PHUrIZhJHICv4zgkMTHXBtgHJi2";
+    const [keyString, setKeyString] = (0, import_react5.useState)("");
+    const handlePassEntry = async () => {
+      console.log("Generate password button clicked");
+      console.log("Key String: " + keyString);
+      console.log("userIdEncrypted: " + userIdEncrypted);
+      const decryptedText = await decrypt(userIdEncrypted, keyString);
+      console.log("Decrypted Data: " + decryptedText);
+      if (decryptedText === userId) {
+        console.log("Valid Simple passphrase: User Authenticated");
+        const password = await calculatePassword(keyString);
+        console.log("Password String: ", password);
+        chrome.runtime.sendMessage({
+          action: "fillPassword",
+          passphrase: password
+        }, (response) => {
+          console.log("Message acknowledged by service worker", response);
+        });
+      } else {
+        console.log("Invalid Simple Passphrase");
+      }
+    };
+    return /* @__PURE__ */ import_react4.default.createElement("div", { className: "w-64 p-4 bg-white shadow-lg rounded-lg text-center" }, /* @__PURE__ */ import_react4.default.createElement("h2", { className: "text-lg font-semibold mb-2" }, "Sign Up"), /* @__PURE__ */ import_react4.default.createElement("p", { className: "text-sm text-gray-600 mb-4" }, "Click the button to generate password for site"), /* @__PURE__ */ import_react4.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react4.default.createElement(
+      "input",
+      {
+        type: "text",
+        value: keyString,
+        onChange: (e3) => setKeyString(e3.target.value),
+        className: "w-full p-2 border rounded-md mb-3",
+        placeholder: "Enter Simple Passphrase"
+      }
+    ), /* @__PURE__ */ import_react4.default.createElement(
+      "button",
+      {
+        onClick: handlePassEntry,
+        className: "w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+      },
+      "Generate Password to Login"
+    ));
   }
 
   // app/popup_components.tsx
@@ -65217,7 +65235,7 @@ var Components = (() => {
     };
     const root = (0, import_client.createRoot)(container);
     root.render(
-      /* @__PURE__ */ import_react5.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react5.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react5.default.createElement(Site_LogIn, null))
+      /* @__PURE__ */ import_react6.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react6.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react6.default.createElement(Site_LogIn, null))
     );
   }
   function renderSiteSignUp(container) {
@@ -65226,7 +65244,7 @@ var Components = (() => {
     };
     const root = (0, import_client.createRoot)(container);
     root.render(
-      /* @__PURE__ */ import_react5.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react5.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react5.default.createElement(Site_SignUp, null))
+      /* @__PURE__ */ import_react6.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react6.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react6.default.createElement(Site_SignUp, null))
     );
   }
   return __toCommonJS(popup_components_exports);
