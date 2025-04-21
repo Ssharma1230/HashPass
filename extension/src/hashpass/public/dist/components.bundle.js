@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
@@ -21306,8 +21305,8 @@ var Components = (() => {
   var import_client = __toESM(require_client(), 1);
 
   // app/site_login_popup/site_login_component.tsx
-  var import_react = __toESM(require_react(), 1);
   var import_react2 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
 
   // app/security_components/tools/hashing_tool.tsx
   var hashText = async (text) => {
@@ -21335,8 +21334,11 @@ var Components = (() => {
   // app/security_components/tools/AES_tool.tsx
   async function importKey(keyString) {
     try {
+      console.log("Client side import key text to be hashed (keyString): ", keyString);
       const hashedKeyString = await hashText(keyString);
+      console.log("Client side import key hashed text: ", hashedKeyString);
       const extractedKeyStringHash = extractHash(hashedKeyString);
+      console.log(extractedKeyStringHash);
       const keyBytes = new Uint8Array(extractedKeyStringHash.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
       if (keyBytes.length !== 16 && keyBytes.length !== 32) {
         throw new Error("Invalid key length! Must be 16 or 32 bytes.");
@@ -21386,48 +21388,8 @@ var Components = (() => {
     }
   }
 
-  // app/site_login_popup/site_login_component.tsx
-  function Site_LogIn() {
-    const userId = "testuserid";
-    const userIdEncrypted = "RN5Oag4zBlVIwNS1NBCatXezzn3t/aLR8mn28t2sE/TBp0hpYtU=";
-    const [keyString, setKeyString] = (0, import_react2.useState)("");
-    const [decryptedData, setDecryptedData] = (0, import_react2.useState)("");
-    const handleSimplePassAuth = async () => {
-      console.log("userIdEncrypted: " + userIdEncrypted);
-      console.log("Key String: " + keyString);
-      const decryptedText = await decrypt(userIdEncrypted, keyString);
-      setDecryptedData(decryptedText);
-      console.log("Decrypted Data: " + decryptedData);
-      if (decryptedData === userId) {
-        console.log("Valid Simple passphrase: User Authenticated");
-      } else {
-        console.log("Invalid Simple Passphrase");
-      }
-    };
-    return /* @__PURE__ */ import_react.default.createElement("div", { className: "max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-xl font-bold mb-4" }, "Enter Simple Passphrase to log-in to site"), /* @__PURE__ */ import_react.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react.default.createElement(
-      "input",
-      {
-        type: "text",
-        value: keyString,
-        onChange: (e3) => setKeyString(e3.target.value),
-        className: "w-full p-2 border rounded-md mb-3",
-        placeholder: "Enter Simple Passphrase"
-      }
-    ), /* @__PURE__ */ import_react.default.createElement(
-      "button",
-      {
-        onClick: handleSimplePassAuth,
-        className: "w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-      },
-      "Encrypt User ID"
-    ));
-  }
-
-  // app/site_signup_popup/site_signup_component.tsx
-  var import_react4 = __toESM(require_react(), 1);
-
   // app/security_components/components/password_generator.tsx
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react = __toESM(require_react(), 1);
 
   // node_modules/@babel/runtime/helpers/esm/extends.js
   function _extends() {
@@ -65128,35 +65090,44 @@ var Components = (() => {
     "Beethoven"
     // Answer to: "What is your favorite composer or musician?"
   ];
-  function PasswordGenerator() {
+  async function calculatePassword(inputValue) {
+    if (!inputValue) return;
     const enc_name = "Name";
     const enc_email = "name@gmail.com";
     const enc_phone = "5555555555";
     const site_domain = "amazon.com";
-    const [inputValue, setInputValue] = (0, import_react3.useState)("");
-    const [strong_password, setStrongPasswordText] = (0, import_react3.useState)("");
+    const hashed_name = await hashText(enc_name);
+    const hashed_email = await hashText(enc_email);
+    const hashed_phone = await hashText(enc_phone);
+    const hashed_domain = await hashText(site_domain);
+    const salt_indicies = await CalculateSalts(inputValue);
+    const salt1 = securityAnswers[salt_indicies[0]];
+    const salt2 = securityAnswers[salt_indicies[1]];
+    const salt3 = securityAnswers[salt_indicies[2]];
+    console.log(salt_indicies);
+    const arranged_string = hashed_name + salt2 + hashed_phone + salt1 + hashed_domain + salt3 + hashed_email;
+    const fullHash = await hashText(arranged_string);
+    const extractedHash = extractHash(fullHash);
+    console.log(fullHash);
+    console.log(extractedHash);
+    return extractHash;
+  }
+  function PasswordGenerator() {
+    const [inputValue, setInputValue] = (0, import_react.useState)("");
+    const [strong_password, setStrongPasswordText] = (0, import_react.useState)("");
     const handleInputChange = (e3) => {
       setInputValue(e3.target.value);
     };
     const handleGeneratePassword = async () => {
-      if (!inputValue) return;
-      const hashed_name = await hashText(enc_name);
-      const hashed_email = await hashText(enc_email);
-      const hashed_phone = await hashText(enc_phone);
-      const hashed_domain = await hashText(site_domain);
-      const salt_indicies = await CalculateSalts(inputValue);
-      const salt1 = securityAnswers[salt_indicies[0]];
-      const salt2 = securityAnswers[salt_indicies[1]];
-      const salt3 = securityAnswers[salt_indicies[2]];
-      console.log(salt_indicies);
-      const arranged_string = hashed_name + salt2 + hashed_phone + salt1 + hashed_domain + salt3 + hashed_email;
-      const fullHash = await hashText(arranged_string);
-      const extractedHash = extractHash(fullHash);
-      console.log(fullHash);
-      console.log(extractedHash);
-      setStrongPasswordText(extractedHash);
+      const strongPasswordFn = await calculatePassword(inputValue);
+      if (!strongPasswordFn) {
+        console.error("Password generator was undefined\u2014cannot proceed");
+        return;
+      }
+      const strong_password2 = strongPasswordFn(inputValue);
+      setStrongPasswordText(strong_password2);
     };
-    return /* @__PURE__ */ import_react3.default.createElement("div", { style: { padding: "1rem" } }, /* @__PURE__ */ import_react3.default.createElement("label", { htmlFor: "my-input" }, "Enter something:"), /* @__PURE__ */ import_react3.default.createElement(
+    return /* @__PURE__ */ import_react.default.createElement("div", { style: { padding: "1rem" } }, /* @__PURE__ */ import_react.default.createElement("label", { htmlFor: "my-input" }, "Enter something:"), /* @__PURE__ */ import_react.default.createElement(
       "input",
       {
         id: "my-input",
@@ -65165,10 +65136,47 @@ var Components = (() => {
         onChange: handleInputChange,
         style: { marginLeft: "0.5rem" }
       }
-    ), /* @__PURE__ */ import_react3.default.createElement("button", { onClick: handleGeneratePassword }, "Generate Strong Password"), /* @__PURE__ */ import_react3.default.createElement("p", null, "Current value: ", inputValue), strong_password && /* @__PURE__ */ import_react3.default.createElement("p", null, "Strong Password: ", strong_password));
+    ), /* @__PURE__ */ import_react.default.createElement("button", { onClick: handleGeneratePassword }, "Generate Strong Password"), /* @__PURE__ */ import_react.default.createElement("p", null, "Current value: ", inputValue), strong_password && /* @__PURE__ */ import_react.default.createElement("p", null, "Strong Password: ", strong_password));
+  }
+
+  // app/site_login_popup/site_login_component.tsx
+  function Site_LogIn() {
+    const userId = "testuserid2";
+    const userIdEncrypted = "HCxyVsfCvxXKyw/rMRpuTJv99PHUrIZhJHICv4zgkMTHXBtgHJi2";
+    const [keyString, setKeyString] = (0, import_react3.useState)("");
+    const handleSimplePassAuth = async () => {
+      console.log("userIdEncrypted: " + userIdEncrypted);
+      console.log("Key String: " + keyString);
+      const decryptedText = await decrypt(userIdEncrypted, keyString);
+      console.log("Decrypted Data: " + decryptedText);
+      if (decryptedText === userId) {
+        console.log("Valid Simple passphrase: User Authenticated");
+        calculatePassword(keyString);
+      } else {
+        console.log("Invalid Simple Passphrase");
+      }
+    };
+    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-xl font-bold mb-4" }, "Enter Simple Passphrase to log-in to site"), /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
+      "input",
+      {
+        type: "text",
+        value: keyString,
+        onChange: (e3) => setKeyString(e3.target.value),
+        className: "w-full p-2 border rounded-md mb-3",
+        placeholder: "Enter Simple Passphrase"
+      }
+    ), /* @__PURE__ */ import_react2.default.createElement(
+      "button",
+      {
+        onClick: handleSimplePassAuth,
+        className: "w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+      },
+      "Generate Password and Login"
+    ));
   }
 
   // app/site_signup_popup/site_signup_component.tsx
+  var import_react4 = __toESM(require_react(), 1);
   function Site_SignUp() {
     return /* @__PURE__ */ import_react4.default.createElement("div", { className: "w-64 p-4 bg-white shadow-lg rounded-lg text-center" }, /* @__PURE__ */ import_react4.default.createElement("h2", { className: "text-lg font-semibold mb-2" }, "Sign Up"), /* @__PURE__ */ import_react4.default.createElement("p", { className: "text-sm text-gray-600 mb-4" }, "Click the button to generate a secure password"), /* @__PURE__ */ import_react4.default.createElement(PasswordGenerator, null));
   }

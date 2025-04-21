@@ -2,25 +2,27 @@
 import React from 'react';
 import { useState } from "react";
 import {decrypt} from "../security_components/tools/AES_tool"
+import {calculatePassword} from '../security_components/components/password_generator';
 
 export default function Site_LogIn() {
-    const userId = "testuserid" // This value will be the user's id in plaintext (retrieved from DB)
-    const userIdEncrypted = "RN5Oag4zBlVIwNS1NBCatXezzn3t/aLR8mn28t2sE/TBp0hpYtU=" // This value will be the user's id in ciphertext (retrieved from DB)
+    const userId = "testuserid2" // This value will be the user's id in plaintext (retrieved from DB)
+    const userIdEncrypted = "HCxyVsfCvxXKyw/rMRpuTJv99PHUrIZhJHICv4zgkMTHXBtgHJi2" // This value will be the user's id in ciphertext (retrieved from DB)
 
-    //valid simple pass for testing is 1234
+    //valid simple pass for testing is testkey
     const [keyString, setKeyString] = useState("");
-    const [decryptedData, setDecryptedData] = useState("");
+    //const [decryptedData, setDecryptedData] = useState("");
 
     const handleSimplePassAuth = async () => {
         console.log("userIdEncrypted: "+userIdEncrypted)
         console.log("Key String: "+ keyString)
         const decryptedText = await decrypt(userIdEncrypted, keyString);
-        setDecryptedData(decryptedText)
+        //setDecryptedData(decryptedText)
 
-        console.log("Decrypted Data: "+decryptedData);
+        console.log("Decrypted Data: "+decryptedText);
 
-        if(decryptedData === userId){
+        if(decryptedText === userId){
           console.log("Valid Simple passphrase: User Authenticated")
+          calculatePassword(keyString);
         }
         else{
           console.log("Invalid Simple Passphrase")
@@ -43,7 +45,7 @@ export default function Site_LogIn() {
             <button
                 onClick={handleSimplePassAuth}
                 className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
-                Encrypt User ID
+                Generate Password and Login
             </button>
 
             

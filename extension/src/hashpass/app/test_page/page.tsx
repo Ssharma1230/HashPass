@@ -1,5 +1,6 @@
 "use client";
 import PasswordGenerator from "../security_components/components/password_generator";
+import Encryption_Tester from "../security_components/enc_dec_tool";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <>
         <section className="mt-4 text-lg">Password Generator</section>
         <PasswordGenerator/>
+        <Encryption_Tester/>
       </>
     
     </main>
