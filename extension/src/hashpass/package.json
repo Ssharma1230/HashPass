@@ -24,6 +24,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "ssh2": "^1.16.0",
+    "tldts": "^7.0.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
