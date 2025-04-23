@@ -1,16 +1,25 @@
 // Function to inject a login popup into the page using the bundled TSX component
 function injectLoginPopup() {
-  const container = document.createElement('div');
-  container.id = 'hashpass-login-popup';
-  container.style.position = 'fixed';
-  container.style.top = '20%';
-  container.style.left = '50%';
-  container.style.transform = 'translateX(-50%)';
-  container.style.zIndex = '10000';
-  document.body.appendChild(container);
+  const host = document.createElement('div');
+  host.id = 'hashpass-login-popup';
+  host.style.position = 'fixed';
+  host.style.top = '20%';
+  host.style.left = '50%';
+  host.style.transform = 'translateX(-50%)';
+  host.style.zIndex = '10000';
+
+  const shadow = host.attachShadow({ mode: 'open' });
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = chrome.runtime.getURL('tailwind.css');
+  shadow.appendChild(link);
+  const reactContainer = document.createElement('div');
+  shadow.appendChild(reactContainer);
+
+  document.body.appendChild(host);
 
   if (window.Components && typeof window.Components.renderSiteLogIn === 'function') {
-    window.Components.renderSiteLogIn(container);
+    window.Components.renderSiteLogIn(reactContainer);
   } else {
     console.error('Login component function not available.');
   }
@@ -18,17 +27,26 @@ function injectLoginPopup() {
 
 // Function to inject a signup popup into the page using the bundled TSX component
 function injectSignupPopup() {
-  const container = document.createElement('div');
-  container.id = 'hashpass-signup-popup';
-  container.style.position = 'fixed';
-  container.style.top = '20%';
-  container.style.left = '50%';
-  container.style.transform = 'translateX(-50%)';
-  container.style.zIndex = '10000';
-  document.body.appendChild(container);
+  const host = document.createElement('div');
+  host.id = 'hashpass-signup-popup';
+  host.style.position = 'fixed';
+  host.style.top = '20%';
+  host.style.left = '50%';
+  host.style.transform = 'translateX(-50%)';
+  host.style.zIndex = '10000';
+
+  const shadow = host.attachShadow({ mode: 'open' });
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = chrome.runtime.getURL('tailwind.css');
+  shadow.appendChild(link);
+  const reactContainer = document.createElement('div');
+  shadow.appendChild(reactContainer);
+  
+  document.body.appendChild(host);
 
   if (window.Components && typeof window.Components.renderSiteSignUp === 'function') {
-    window.Components.renderSiteSignUp(container);
+    window.Components.renderSiteSignUp(reactContainer);
   } else {
     console.error('Signup component function not available.');
   }

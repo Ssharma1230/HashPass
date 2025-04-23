@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
@@ -65138,22 +65137,22 @@ var Components = (() => {
         console.log("Invalid Simple Passphrase");
       }
     };
-    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "max-w-md mx-auto p-6 bg-white shadow-lg rounded-xl" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-xl font-bold mb-4" }, "Enter Simple Passphrase to log in to site"), /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-700" }, "Simple Passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
+    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "max-w-md mx-auto mt-16 p-8 bg-white shadow-2xl rounded-2xl transition-all duration-300 ease-in-out" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Login with Your Passphrase"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Simple Passphrase"), /* @__PURE__ */ import_react2.default.createElement(
       "input",
       {
         type: "text",
         value: keyString,
         onChange: (e3) => setKeyString(e3.target.value),
-        className: "w-full p-2 border rounded-md mb-3",
-        placeholder: "Enter Simple Passphrase"
+        placeholder: "Enter your passphrase",
+        className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
       }
-    ), /* @__PURE__ */ import_react2.default.createElement(
+    )), /* @__PURE__ */ import_react2.default.createElement(
       "button",
       {
         onClick: handlePassEntry,
-        className: "w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+        className: "w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition duration-300"
       },
-      "Generate Password to Login"
+      "Generate Password & Login"
     ));
   }
 

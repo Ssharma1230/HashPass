@@ -25,7 +25,7 @@
   "options_page": "login/index.html",
   "web_accessible_resources": [
       {
-        "resources": ["dashboard/index.html"],
+        "resources": ["dashboard/index.html", "tailwind.css"],
         "matches": ["<all_urls>"]
       }
   ],
