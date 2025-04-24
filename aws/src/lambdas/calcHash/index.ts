@@ -1,4 +1,3 @@
-import { APIGatewayEvent, Context } from "aws-lambda";
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import argon2 from 'argon2'
 

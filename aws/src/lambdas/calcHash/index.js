@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const argon2 = require('argon2');
+const argon2_1 = __importDefault(require("argon2"));
 const handler = async (event) => {
     const httpMethod = event.requestContext.http.method;
     if (httpMethod === 'OPTIONS') {
@@ -18,26 +18,11 @@ const handler = async (event) => {
         };
     }
     try {
-        const raw = event.body;
-
-        // Parse JSON if input is a JSON object or read raw text
-        let textToHash;
-        try {
-            const parsed = JSON.parse(raw);
-            if (parsed && typeof parsed.textToHash === 'string') {
-                textToHash = parsed.textToHash;
-            } else {
-                textToHash = typeof parsed === 'string' ? parsed : raw;
-            }
-        } catch {
-            textToHash = raw;
-        }
-
-        console.log("Data to Hash: ", textToHash);
+        const dataToHash = typeof event.body === 'string' ? event.body : JSON.stringify(event.body, null, 2);
         const slt = Buffer.from('my-static-salt', 'utf8');
-        const hashValue = await argon2.hash(textToHash, {
+        const hashValue = await argon2_1.default.hash(dataToHash, {
             salt: slt,
-            type: argon2.argon2id,
+            type: argon2_1.default.argon2id,
             timeCost: 2, // Number of iterations.
             memoryCost: 65536, // Memory in KiB.
             hashLength: 32, // Length of the resulting hash.

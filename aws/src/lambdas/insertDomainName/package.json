@@ -1,14 +1,9 @@
 {
-    "name": "my-lambda",
-    "version": "1.0.0",
-    "main": "index.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "npx tsc",
+        "zip": "(zip insertDomainName.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath insertDomainName.zip)",
+        "move": "(mv insertDomainName.zip ../../terraform || powershell Move-Item insertDomainName.zip ../../terraform)"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
     "devDependencies": {
         "@types/aws-lambda": "^8.10.147",
         "typescript": "^5.7.3"
