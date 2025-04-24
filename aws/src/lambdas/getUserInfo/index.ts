@@ -1,4 +1,5 @@
-import mysql from 'mysql2/promise';
+import { APIGatewayEvent } from "aws-lambda";
+import { createConnection } from 'mysql2/promise';
 
 const dbConfig = {
   host: process.env.DB_HOST,
@@ -7,7 +8,7 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-export const handler = async (event) => {
+export const handler = async (event: APIGatewayEvent) => {
   try {
     console.log("Incoming event:", JSON.stringify(event, null, 2));
 
@@ -27,7 +28,7 @@ export const handler = async (event) => {
     console.log("Parsed UUID:", UUID);
 
     try {
-      const connection = await mysql.createConnection(dbConfig);
+      const connection = await createConnection(dbConfig);
       const [rows] = await connection.execute('SELECT enc_email, enc_name, enc_phone_num FROM users WHERE uuid = ?', [UUID]);
       await connection.end();
   
@@ -40,7 +41,7 @@ export const handler = async (event) => {
       console.error("Database error:", error);
       return {
         statusCode: 500,
-        body: JSON.stringify({ message: "Database connection failed", error: error.message }),
+        body: JSON.stringify({ message: "Database connection failed", error: error }),
       };
     }
   } catch (error) {
