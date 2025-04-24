@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TextField, Button, Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
+import { encrypt } from '../security_components/tools/AES_tool';
+import { v4 as uuidv4 } from 'uuid';
 
 const securityQuestions = [
   "What is your favorite color?",
@@ -66,10 +68,24 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   try {
-    const res = await fetch('/api/user-signup', {
+    const uuid = uuidv4(); 
+    const enc_uuid = await encrypt(uuid, formData.passphrase);
+    const enc_name = await encrypt(formData.name, formData.passphrase);
+    const enc_phone = await encrypt(formData.phone, formData.passphrase);
+    const enc_answers = await Promise.all(formData.securityAnswers.map((answer: string) => encrypt(answer, formData.passphrase)));
+    const dataToSend = {
+      uuid: uuid,
+      enc_uuid: enc_uuid,
+      enc_name: enc_name,
+      email: formData.email,
+      enc_phone: enc_phone,
+      enc_answers: enc_answers,
+    }
+
+    const res = await fetch('https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(dataToSend),
     });
 
     const data = await res.json();
