@@ -138,3 +138,25 @@ resource "aws_lambda_permission" "apigw-lambda_getUserInfo" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${var.AWS_REGION}:${var.AWS_ACCOUNT_ID}:${aws_apigatewayv2_api.http_api.id}/*"
 }
+
+resource "aws_apigatewayv2_route" "generate_password" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "POST /gen_pass"
+  target    = "integrations/${aws_apigatewayv2_integration.genpass_integration.id}"
+}
+
+resource "aws_apigatewayv2_integration" "genpass_integration" {
+  api_id             = aws_apigatewayv2_api.http_api.id
+  integration_type   = "AWS_PROXY"
+  integration_uri    = aws_lambda_function.gen_pass_lambda.invoke_arn
+  integration_method = "POST"
+}
+
+
+resource "aws_lambda_permission" "apigw-lambda_passgen" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.gen_pass_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${var.AWS_REGION}:${var.AWS_ACCOUNT_ID}:${aws_apigatewayv2_api.http_api.id}/*"
+}
