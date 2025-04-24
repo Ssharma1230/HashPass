@@ -4,6 +4,7 @@ resource "aws_lambda_function" "getUserInfo_lambda" {
   role             = aws_iam_role.iam_role.arn
   handler          = "getUserInfo/index.handler"
   runtime          = "nodejs22.x"
+  timeout          = 29
   source_code_hash = filebase64sha256("${path.cwd}/getUserInfo.zip")
 
   vpc_config {

@@ -57,37 +57,37 @@ resource "aws_apigatewayv2_integration" "calchash_integration" {
 
 resource "aws_apigatewayv2_route" "signup" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /user/signup"
+  route_key = "POST /signup"
   target    = "integrations/${aws_apigatewayv2_integration.signup_integration.id}"
 }
 
 resource "aws_apigatewayv2_route" "getQuestions" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /user/getQuestions"
+  route_key = "POST /getQuestions"
   target    = "integrations/${aws_apigatewayv2_integration.getSecurityQues_integration.id}"
 }
 
 resource "aws_apigatewayv2_route" "insertQuestions" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /user/insertQuestions"
+  route_key = "POST /insertQuestions"
   target    = "integrations/${aws_apigatewayv2_integration.insertSecurityQues_integration.id}"
 }
 
 resource "aws_apigatewayv2_route" "insertDomainName" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /user/insertDomainName"
+  route_key = "POST /insertDomainName"
   target    = "integrations/${aws_apigatewayv2_integration.insertDomainName_integration.id}"
 }
 
 resource "aws_apigatewayv2_route" "getUserInfo" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /user/getUserInfo"
+  route_key = "POST /getUserInfo"
   target    = "integrations/${aws_apigatewayv2_integration.getUserInfo_integration.id}"
 }
 
 resource "aws_apigatewayv2_route" "calculateHash" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /hash/calcHash"
+  route_key = "POST /calcHash"
   target    = "integrations/${aws_apigatewayv2_integration.calchash_integration.id}"
 }
 

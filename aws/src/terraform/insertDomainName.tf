@@ -4,6 +4,7 @@ resource "aws_lambda_function" "insertDomainName_lambda" {
   role             = aws_iam_role.iam_role.arn
   handler          = "insertDomainName/index.handler"
   runtime          = "nodejs22.x"
+  timeout          = 29
   source_code_hash = filebase64sha256("${path.cwd}/insertDomainName.zip")
 
   vpc_config {
