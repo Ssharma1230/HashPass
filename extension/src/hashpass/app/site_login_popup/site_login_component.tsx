@@ -41,18 +41,18 @@ export default function Site_LogIn() {
     return (
       <div className="w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Login with Your Passphrase
+          Log In with HashPass
         </h2>
     
         <div className="mb-5">
           <label className="block text-sm font-medium text-gray-600 mb-2">
-            Simple Passphrase
+            Enter your passphrase:
           </label>
           <input
             type="text"
             value={keyString}
             onChange={(e) => setKeyString(e.target.value)}
-            placeholder="Enter your passphrase"
+            placeholder="Simple Passphrase"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
           />
         </div>

@@ -17,9 +17,9 @@ export default function Site_Signup_Popup() {
   }, []);
 
   return (
-    <div className="w-64 p-4 bg-white shadow-lg rounded-lg text-center">
-      <Site_SignUp/>
-      <div style={{ fontWeight: 'bold', marginTop: '8px' }}>
+    <div className="w-full max-w-md mx-auto p-4 bg-white shadow-xl rounded-2xl text-center">
+      <Site_SignUp />
+      <div className="font-bold text-lg mt-4 text-gray-700">
         {domain}
       </div>
     </div>
