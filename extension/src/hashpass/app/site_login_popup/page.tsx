@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Site_LogIn from "./site_login_component"
+import '../globals.css';
 
 export default function Site_Signup_Popup() {
   const [domain, setDomain] = useState('');
@@ -17,11 +18,11 @@ export default function Site_Signup_Popup() {
   }, []);
 
   return (
-    <div className="w-64 p-4 bg-white shadow-lg rounded-lg text-center">
-      <Site_LogIn/>
-      <div style={{ fontWeight: 'bold', marginTop: '8px' }}>
+    <div className="w-full max-w-md mx-auto p-4 bg-white shadow-xl rounded-2xl text-center">
+      <Site_LogIn />
+      <div className="font-bold text-lg mt-4 text-gray-700">
         {domain}
       </div>
     </div>
-  );
+  );  
 }
