@@ -1,6 +1,6 @@
 export const hashText = async (text: string): Promise<string> => {
     try {
-        const response = await fetch('https://oawbglgv44.execute-api.us-east-1.amazonaws.com/dev/calc_hash', {
+        const response = await fetch('https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/calcHash', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ textToHash: text }),

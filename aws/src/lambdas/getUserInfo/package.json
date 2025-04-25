@@ -1,16 +1,14 @@
 {
-    "name": "getuserinfo",
-    "version": "1.0.0",
-    "main": "index.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "npx tsc",
+        "zip": "(zip getUserInfo.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath getUserInfo.zip)",
+        "move": "(mv getUserInfo.zip ../../terraform || powershell Move-Item getUserInfo.zip ../../terraform)"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.147",
+        "typescript": "^5.7.3"
+    },
     "dependencies": {
-      "mysql2": "^3.14.0"
+        "mysql2": "^3.13.0"
     }
-  }
-  
+}
