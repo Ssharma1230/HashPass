@@ -55,6 +55,20 @@ resource "aws_apigatewayv2_integration" "calchash_integration" {
   integration_method = "POST"
 }
 
+resource "aws_apigatewayv2_integration" "getBlockedDomains_integration" {
+    api_id             = aws_apigatewayv2_api.http_api.id
+    integration_type   = "AWS_PROXY"
+    integration_uri    = aws_lambda_function.getBlockedDomains_lambda.invoke_arn
+    integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_integration" "insertBlockedDomain_integration" {
+    api_id             = aws_apigatewayv2_api.http_api.id
+    integration_type   = "AWS_PROXY"
+    integration_uri    = aws_lambda_function.insertBlockedDomain_lambda.invoke_arn
+    integration_method = "POST"
+}
+
 resource "aws_apigatewayv2_route" "signup" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /signup"
@@ -89,6 +103,18 @@ resource "aws_apigatewayv2_route" "calculateHash" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /calcHash"
   target    = "integrations/${aws_apigatewayv2_integration.calchash_integration.id}"
+}
+
+resource "aws_apigatewayv2_route" "getBlockedDomains" {
+    api_id    = aws_apigatewayv2_api.http_api.id
+    route_key = "POST /getBlockedDomains"
+    target    = "integrations/${aws_apigatewayv2_integration.getBlockedDomains_integration.id}"
+}
+
+resource "aws_apigatewayv2_route" "insertBlockedDomain" {
+    api_id = aws_apigatewayv2_api.http_api.id
+    route_key = "POST /insertBlockedDomain"
+    target = "integrations/${aws_apigatewayv2_integration.insertBlockedDomain_integration.id}"
 }
 
 resource "aws_lambda_permission" "apigw-lambda" {
