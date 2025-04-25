@@ -5,7 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
 const handler = async (event) => {
-    const httpMethod = event.requestContext.http.method;
+    console.log('Received event:', JSON.stringify(event, null));
+    const httpMethod = event.requestContext.httpMethod;
     if (httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
