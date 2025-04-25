@@ -65137,7 +65137,7 @@ var Components = (() => {
         console.log("Invalid Simple Passphrase");
       }
     };
-    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "max-w-md mx-auto mt-16 p-8 bg-white shadow-2xl rounded-2xl transition-all duration-300 ease-in-out" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Login with Your Passphrase"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Simple Passphrase"), /* @__PURE__ */ import_react2.default.createElement(
+    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Login with Your Passphrase"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Simple Passphrase"), /* @__PURE__ */ import_react2.default.createElement(
       "input",
       {
         type: "text",

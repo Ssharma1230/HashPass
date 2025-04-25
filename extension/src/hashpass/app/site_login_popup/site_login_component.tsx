@@ -39,7 +39,7 @@ export default function Site_LogIn() {
     
     
     return (
-      <div className="max-w-md mx-auto mt-16 p-8 bg-white shadow-2xl rounded-2xl transition-all duration-300 ease-in-out">
+      <div className="w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
           Login with Your Passphrase
         </h2>

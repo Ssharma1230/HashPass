@@ -3,9 +3,11 @@ function injectLoginPopup() {
   const host = document.createElement('div');
   host.id = 'hashpass-login-popup';
   host.style.position = 'fixed';
-  host.style.top = '20%';
-  host.style.left = '50%';
-  host.style.transform = 'translateX(-50%)';
+  host.style.bottom = '40px';
+  host.style.right = '40px';
+  host.style.top = 'unset';
+  host.style.left = 'unset';
+  host.style.transform = 'none';
   host.style.zIndex = '10000';
 
   const shadow = host.attachShadow({ mode: 'open' });
@@ -30,9 +32,11 @@ function injectSignupPopup() {
   const host = document.createElement('div');
   host.id = 'hashpass-signup-popup';
   host.style.position = 'fixed';
-  host.style.top = '20%';
-  host.style.left = '50%';
-  host.style.transform = 'translateX(-50%)';
+  host.style.bottom = '40px';
+  host.style.right = '40px';
+  host.style.top = 'unset';
+  host.style.left = 'unset';
+  host.style.transform = 'none';
   host.style.zIndex = '10000';
 
   const shadow = host.attachShadow({ mode: 'open' });
