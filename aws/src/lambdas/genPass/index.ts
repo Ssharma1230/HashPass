@@ -15,10 +15,15 @@ const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyRe
       };
     }
     try {
-        const dataToHash = typeof event.body === 'string' ? event.body : JSON.stringify(event.body, null, 2);
-        const slt = 'my-static-salt'; // Figure out how to get this value from event as a json and stringify it like in the line above
+        //const dataToHash = typeof event.body === 'string' ? event.body : JSON.stringify(event.body, null, 2);
+        //const slt = 'my-static-salt'; // Figure out how to get this value from event as a json and stringify it like in the line above
 
-        const strong_password = await calculatePassword(dataToHash, slt);
+        const body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+
+        const dataToHash: string = body.dataToHash;
+        const salt: string = body.salt;
+
+        const strong_password = await calculatePassword(dataToHash, salt);
 
         /*const hashValue = await argon2.hash(dataToHash, {
           salt: slt,
