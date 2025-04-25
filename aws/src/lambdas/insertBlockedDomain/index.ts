@@ -30,10 +30,10 @@ const handler = async (event: APIGatewayEvent) => {
     }
 
     const { uuid, domain } = request_body;
-    const connection = await createConnection(dbConfig);; 
+    const connection = await createConnection(dbConfig);
     try {
         const [rows] = await connection.execute(
-            'INSERT INTO blocked_domains (uuid, domain) VALUES (?);', 
+            'INSERT INTO blocked_domains (uuid, domain) VALUES (?, ?);', 
             [uuid, domain]
         );    
         console.log(rows);

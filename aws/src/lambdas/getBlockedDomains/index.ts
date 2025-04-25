@@ -1,6 +1,13 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import { createConnection } from 'mysql2/promise';
 
+const dbConfig = {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+};
+
 const handler = async (event: APIGatewayEvent) => {
     console.log('EVENT: \n' + JSON.stringify(event, null, 2));
     let request_body;
@@ -23,12 +30,6 @@ const handler = async (event: APIGatewayEvent) => {
     }
 
     const { uuid } = request_body;
-    const dbConfig = {
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME,
-    };
     const connection = await createConnection(dbConfig);; 
     try {
         const [rows] = await connection.execute(
@@ -45,7 +46,7 @@ const handler = async (event: APIGatewayEvent) => {
         console.error("Error inserting data:", error);
         return {
             statusCode: 400,
-            body: JSON.stringify({ message: "Error with DB" })
+            body: JSON.stringify({ message: "Error with DB: " + error })
         };
     }
 }
