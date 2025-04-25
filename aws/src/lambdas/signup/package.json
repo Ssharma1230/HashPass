@@ -1,16 +1,15 @@
 {
-    "name": "lambda",
-    "version": "1.0.0",
-    "main": "index.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "npx tsc",
+        "zip": "(zip signup.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath signup.zip)",
+        "move": "(mv signup.zip ../../terraform || powershell Move-Item signup.zip ../../terraform)"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.147",
+        "typescript": "^5.7.3"
+    },
     "dependencies": {
-      "mysql2": "^3.14.0"
+        "mysql2": "^3.13.0"
     }
   }
   

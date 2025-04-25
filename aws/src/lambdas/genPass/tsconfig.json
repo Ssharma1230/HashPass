@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "lib": ["ES2020"],
+    "moduleResolution": "Node",
+    "outDir": "build",          
+    "rootDir": ".",           
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "index.ts",                 
+    "src/**/*.ts"               
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "terraform"                 
+  ]
+}

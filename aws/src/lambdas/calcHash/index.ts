@@ -1,9 +1,9 @@
-import { APIGatewayEvent, Context } from "aws-lambda";
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { APIGatewayProxyResultV2, APIGatewayEvent } from 'aws-lambda';
 import argon2 from 'argon2'
 
-const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
-    const httpMethod = event.requestContext.http.method;
+const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResultV2> => {
+    console.log('Received event:', JSON.stringify(event, null));
+    const httpMethod = event.requestContext.httpMethod;
     if (httpMethod === 'OPTIONS') {
       return {
         statusCode: 200,

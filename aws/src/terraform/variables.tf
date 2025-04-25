@@ -1,6 +1,6 @@
 variable "release_version" {
-    default = "0.1.0"
-    type    = string
+  default = "0.1.0"
+  type    = string
 }
 
 variable "AWS_REGION" {
