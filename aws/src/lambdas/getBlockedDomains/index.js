@@ -33,12 +33,13 @@ const handler = async (event) => {
     const connection = await (0, promise_1.createConnection)(dbConfig);
     ;
     try {
-        const [rows] = await connection.execute('SELECT * FROM blocked_domains WHERE uuid = ?;', [uuid]);
+        const [rows] = await connection.execute('SELECT domain FROM blocked_domains WHERE uuid = ?;', [uuid]);
         console.log(rows);
         await connection.end();
+        const domains = rows.map(row => row.domain);
         return {
             statusCode: 200,
-            body: JSON.stringify(rows)
+            body: JSON.stringify(domains)
         };
     }
     catch (error) {

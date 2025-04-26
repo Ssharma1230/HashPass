@@ -1,5 +1,5 @@
 import { APIGatewayEvent } from 'aws-lambda';
-import { createConnection } from 'mysql2/promise';
+import { createConnection, RowDataPacket } from 'mysql2/promise';
 
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -32,15 +32,16 @@ const handler = async (event: APIGatewayEvent) => {
     const { uuid } = request_body;
     const connection = await createConnection(dbConfig);; 
     try {
-        const [rows] = await connection.execute(
-            'SELECT * FROM blocked_domains WHERE uuid = ?;', 
+        const [rows] = await connection.execute<RowDataPacket[]>(
+            'SELECT domain FROM blocked_domains WHERE uuid = ?;', 
             [uuid]
         );    
         console.log(rows);
         await connection.end();
+        const domains = rows.map(row => row.domain);
         return {
             statusCode: 200,
-            body: JSON.stringify(rows)
+            body: JSON.stringify(domains)
         }
     } catch (error) {
         console.error("Error inserting data:", error);

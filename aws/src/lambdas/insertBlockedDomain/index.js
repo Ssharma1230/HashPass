@@ -31,9 +31,8 @@ const handler = async (event) => {
     }
     const { uuid, domain } = request_body;
     const connection = await (0, promise_1.createConnection)(dbConfig);
-    ;
     try {
-        const [rows] = await connection.execute('INSERT INTO blocked_domains (uuid, domain) VALUES (?);', [uuid, domain]);
+        const [rows] = await connection.execute('INSERT INTO blocked_domains (uuid, domain) VALUES (?, ?);', [uuid, domain]);
         console.log(rows);
         await connection.end();
         return {
