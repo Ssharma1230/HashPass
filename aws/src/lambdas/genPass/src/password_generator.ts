@@ -16,20 +16,23 @@ const securityAnswers: string[] = [
 ];
 
 
-export async function calculatePassword(inputValue: string, argon2_salt:string) : Promise<string>{
-    //if (!inputValue) return;
+export async function calculatePassword(argon2_salt:string) : Promise<string>{
+    
+    const db_val = "test_db_val" // FETCH THIS FROM DB. THIS IS WHAT WILL BE USED FOR CALCULATING CUSTOM SALT INDICIES
 
     const enc_name = "Name";
     const enc_email = "name@gmail.com"
     const enc_phone = "5555555555"
     const site_domain = "amazon.com"
-            
-    const hashed_name = await extractHash((await hashText(enc_name, argon2_salt)).body);
-    const hashed_email = await extractHash((await hashText(enc_email, argon2_salt)).body);
-    const hashed_phone = await extractHash((await hashText(enc_phone, argon2_salt)).body);
-    const hashed_domain = await extractHash((await hashText(site_domain, argon2_salt)).body);
 
-    const salt_indicies = await CalculateSalts(inputValue); // For now input value will go into calculating salt indicies for testing. Will change to an internal db value
+    const prepped_salt = db_val + "-" + argon2_salt;
+            
+    const hashed_name = await extractHash((await hashText(enc_name, prepped_salt)).body);
+    const hashed_email = await extractHash((await hashText(enc_email, prepped_salt)).body);
+    const hashed_phone = await extractHash((await hashText(enc_phone, prepped_salt)).body);
+    const hashed_domain = await extractHash((await hashText(site_domain, prepped_salt)).body);
+
+    const salt_indicies = await CalculateSalts(db_val);
 
     /*const salt1 = await hashText(securityAnswers[salt_indicies[0]])
     const salt2 = await hashText(securityAnswers[salt_indicies[1]])
@@ -41,7 +44,7 @@ export async function calculatePassword(inputValue: string, argon2_salt:string) 
     console.log(salt_indicies)
 
     const arranged_string = hashed_name+salt2+hashed_phone+salt1+hashed_domain+salt3+hashed_email;
-    const fullHash = await hashText(arranged_string, argon2_salt);
+    const fullHash = await hashText(arranged_string, prepped_salt);
     const extractedHash = extractHash(fullHash.body);
     console.log(fullHash)
     console.log(extractedHash)
