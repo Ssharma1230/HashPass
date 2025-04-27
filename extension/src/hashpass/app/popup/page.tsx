@@ -7,6 +7,12 @@ export default function Home() {
       <>
         <section className="mt-4 text-lg">Welcome to HashPass</section>
       </>
+      <button>
+        Open Sign Up Window
+      </button>
+      <button>
+        Open Log In Window
+      </button>
     
     </main>
   );
