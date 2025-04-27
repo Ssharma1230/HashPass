@@ -163,3 +163,14 @@ const observer = new MutationObserver((mutationsList, observer) => {
   });
   
   observer.observe(document.body, { childList: true, subtree: true });
+
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get('uuid');
+
+    if (uuid) {
+        chrome.storage.sync.set({ uuid }, () => {
+            console.log('UUID saved:', uuid);
+        });
+    }
+})();

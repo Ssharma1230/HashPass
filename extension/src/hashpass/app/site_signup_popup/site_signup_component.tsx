@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { decrypt } from "../security_components/tools/AES_tool"
 import {calculatePassword} from '../security_components/components/password_generator';
 import { parse } from "tldts";
@@ -10,11 +10,30 @@ export default function Site_SignUp() {
   // valid simple pass for testing is Passpass@1
 
   const [keyString, setKeyString] = useState("");
+  const [uuid, setUuid] = useState("");
+
+  useEffect(() => {
+    async function fetchUUID(): Promise<string>{
+      return new Promise((resolve) => {
+        chrome.storage.sync.get(["uuid"], (result) => {
+          const uuid = result.uuid || "";
+          resolve(uuid);
+        });
+      });
+    }
+
+    // Set the UUID from storage
+    fetchUUID().then((fetchedUuid) => {
+      setUuid(fetchedUuid);
+    });
+  }, []); // Empty dependency array means this runs once when the component mounts
+
 
   const handlePassEntry = async () => {
     console.log("Generate password button clicked");
     console.log("Key String: " + keyString);
     console.log("userIdEncrypted: " + userIdEncrypted)
+    console.log("UUID: " + uuid);
 
     const decryptedText = await decrypt(userIdEncrypted, keyString);
     console.log("Decrypted Data: " + decryptedText);
@@ -87,3 +106,12 @@ export default function Site_SignUp() {
     </div>
   ); 
 }
+
+// async function fetchUUID() {
+//     return new Promise((resolve) => {
+//         chrome.storage.sync.get(["uuid"], (result) => {
+//             const uuid = result.uuid || "";
+//             resolve(uuid);
+//         });
+//     });
+// }
