@@ -8,7 +8,17 @@ const dbConfig = {
     database: process.env.DB_NAME,
 };
 module.exports.handler = async (event) => {
-    const httpMethod = event.requestContext.http.method;
+    console.log('Received event:', JSON.stringify(event, null));
+    let httpMethod;
+    try {
+        httpMethod = event.requestContext.http.method;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log("APIGatewayEvent");
+        }
+        httpMethod = event.httpMethod;
+    }
     if (httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
@@ -20,7 +30,6 @@ module.exports.handler = async (event) => {
             body: ''
         };
     }
-    console.log("Event: ", JSON.stringify(event, null, 2));
     let request_body;
     if (event.body) {
         request_body = JSON.parse(event.body);

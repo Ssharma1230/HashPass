@@ -1,4 +1,4 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { APIGatewayEvent, APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { createConnection, RowDataPacket } from 'mysql2';
 
 const dbConfig = {
@@ -8,8 +8,17 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-module.exports.handler = async (event: APIGatewayProxyEventV2) => {
-  const httpMethod = event.requestContext.http.method;
+module.exports.handler = async (event: APIGatewayEvent | APIGatewayProxyEventV2 ): Promise<APIGatewayProxyResultV2> => {
+  console.log('Received event:', JSON.stringify(event, null));
+  let httpMethod: string;
+  try {
+    httpMethod = (event as APIGatewayProxyEventV2).requestContext.http.method;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("APIGatewayEvent");
+    }
+    httpMethod = (event as APIGatewayEvent).httpMethod;
+  }
   if (httpMethod === 'OPTIONS') {
       return {
           statusCode: 200,
@@ -21,7 +30,6 @@ module.exports.handler = async (event: APIGatewayProxyEventV2) => {
           body: ''
       };
   }
-  console.log("Event: ", JSON.stringify(event, null, 2));
 
   let request_body;
   if (event.body) {
