@@ -3,11 +3,45 @@ import React from 'react';
 import { useState } from "react";
 import { decrypt } from "../security_components/tools/AES_tool"
 import {calculatePassword} from '../security_components/components/password_generator';
+import { parse } from "tldts";
+
+export async function getEncryptedUuid(uuid: string): Promise<string> {
+  // Replace with your actual endpoint
+  const API_URL = "https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/getUserInfo";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST", // or GET if your endpoint supports it
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ UUID: uuid }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    // Expecting an array of rows: [{ enc_uuid, enc_email, ... }, …]
+    const rows: Array<{ enc_uuid: string }> = await response.json();
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+      throw new Error("No user found for the given UUID");
+    }
+
+    return rows[0].enc_uuid;
+  } catch (err) {
+    console.error("getEncryptedUuid error:", err);
+    throw err;
+  }
+}
+
 
 export default function Site_LogIn() {
-    const userId = "testuserid" // This value will be the user's id in plaintext (retrieved from DB)
-    const userIdEncrypted = "8gb2BSJbvxtRs53WGHs6jBoVBztcA03gIFv8t8Bm/CLt6fGKkEY=" // This value will be the user's id in ciphertext (retrieved from DB)
+    const userId = "testuserid" // This value will be the user's id in plaintext (retrieved from cache)
+    const userIdEncrypted = await getEncryptedUuid(userId);
+    //const userIdEncrypted = "8gb2BSJbvxtRs53WGHs6jBoVBztcA03gIFv8t8Bm/CLt6fGKkEY=" // This value will be the user's id in ciphertext (retrieved from DB)
     //valid simple pass for testing is testkey
+
+    const domain = parse(window.location.href).domain ?? "";
 
     const [keyString, setKeyString] = useState("");
     //const [decryptedData, setDecryptedData] = useState("");
@@ -23,7 +57,7 @@ export default function Site_LogIn() {
 
       if(decryptedText === userId){
         console.log("Valid Simple passphrase: User Authenticated")
-        const password = await calculatePassword(keyString);
+        const password = await calculatePassword(keyString, domain, userIdEncrypted);
         console.log("Password String: ",password)
 
         chrome.runtime.sendMessage({

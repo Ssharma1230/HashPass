@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
@@ -19386,13 +19385,15 @@ var Components = (() => {
 
   // app/security_components/components/password_generator.tsx
   var import_react = __toESM(require_react(), 1);
-  var calculatePassword = async (salt) => {
+  var calculatePassword = async (salt, domain_name, encrypted_userid) => {
     try {
       const response = await fetch("https://a5yz9onkp8.execute-api.us-east-1.amazonaws.com/default/gen_password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          salt
+          salt,
+          domain_name,
+          encrypted_userid
         })
       });
       const data = await response.json();
@@ -19402,54 +19403,6 @@ var Components = (() => {
       return "";
     }
   };
-
-  // app/site_login_popup/site_login_component.tsx
-  function Site_LogIn() {
-    const userId = "testuserid";
-    const userIdEncrypted = "8gb2BSJbvxtRs53WGHs6jBoVBztcA03gIFv8t8Bm/CLt6fGKkEY=";
-    const [keyString, setKeyString] = (0, import_react3.useState)("");
-    const handlePassEntry = async () => {
-      console.log("Generate password button clicked");
-      console.log("Key String: " + keyString);
-      console.log("userIdEncrypted: " + userIdEncrypted);
-      const decryptedText = await decrypt(userIdEncrypted, keyString);
-      console.log("Decrypted Data: " + decryptedText);
-      if (decryptedText === userId) {
-        console.log("Valid Simple passphrase: User Authenticated");
-        const password = await calculatePassword(keyString);
-        console.log("Password String: ", password);
-        chrome.runtime.sendMessage({
-          action: "fillPassword",
-          passphrase: password
-        }, (response) => {
-          console.log("Message acknowledged by service worker", response);
-        });
-      } else {
-        console.log("Invalid Simple Passphrase");
-      }
-    };
-    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Log In with HashPass"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
-      "input",
-      {
-        type: "text",
-        value: keyString,
-        onChange: (e) => setKeyString(e.target.value),
-        placeholder: "Simple Passphrase",
-        className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
-      }
-    )), /* @__PURE__ */ import_react2.default.createElement(
-      "button",
-      {
-        onClick: handlePassEntry,
-        className: "w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition duration-300"
-      },
-      "Generate Password & Login"
-    ));
-  }
-
-  // app/site_signup_popup/site_signup_component.tsx
-  var import_react4 = __toESM(require_react(), 1);
-  var import_react5 = __toESM(require_react(), 1);
 
   // node_modules/tldts-core/dist/es6/src/domain.js
   function shareSameDomainSuffix(hostname, vhost) {
@@ -19884,7 +19837,103 @@ var Components = (() => {
     return parseImpl(url, 5, suffixLookup, options, getEmptyResult());
   }
 
+  // app/site_login_popup/site_login_component.tsx
+  async function getEncryptedUuid(uuid) {
+    const API_URL = "https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/getUserInfo";
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        // or GET if your endpoint supports it
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ UUID: uuid })
+      });
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
+      }
+      const rows = await response.json();
+      if (!Array.isArray(rows) || rows.length === 0) {
+        throw new Error("No user found for the given UUID");
+      }
+      return rows[0].enc_uuid;
+    } catch (err) {
+      console.error("getEncryptedUuid error:", err);
+      throw err;
+    }
+  }
+  function Site_LogIn() {
+    const [keyString, setKeyString] = (0, import_react3.useState)("");
+    const [userIdEncrypted, setUserIdEncrypted] = (0, import_react3.useState)(null);
+    const [loading, setLoading] = (0, import_react3.useState)(true);
+    const userId = "testuserid";
+    const domain = parse(window.location.href).domain ?? "";
+    (0, import_react3.useEffect)(() => {
+      let isMounted = true;
+      async function fetchEncrypted() {
+        try {
+          const enc = await getEncryptedUuid(userId);
+          if (isMounted) {
+            setUserIdEncrypted(enc);
+          }
+        } catch (err) {
+          console.error("Failed to fetch encrypted UUID:", err);
+        } finally {
+          if (isMounted) setLoading(false);
+        }
+      }
+      fetchEncrypted();
+      return () => {
+        isMounted = false;
+      };
+    }, [userId]);
+    const handlePassEntry = async () => {
+      if (!userIdEncrypted) return;
+      console.log("Generate password button clicked");
+      console.log("Key String:", keyString);
+      console.log("userIdEncrypted:", userIdEncrypted);
+      const decryptedText = await decrypt(userIdEncrypted, keyString);
+      console.log("Decrypted Data:", decryptedText);
+      if (decryptedText === userId) {
+        console.log("Valid Simple passphrase: User Authenticated");
+        const password = await calculatePassword(keyString, domain, userIdEncrypted);
+        console.log("Password String:", password);
+        chrome.runtime.sendMessage(
+          {
+            action: "fillPassword",
+            passphrase: password
+          },
+          (response) => {
+            console.log("Message acknowledged by service worker", response);
+          }
+        );
+      } else {
+        console.log("Invalid Simple Passphrase");
+      }
+    };
+    if (loading) {
+      return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl text-center" }, /* @__PURE__ */ import_react2.default.createElement("p", null, "Loading\u2026"));
+    }
+    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Log In with HashPass"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
+      "input",
+      {
+        type: "text",
+        value: keyString,
+        onChange: (e) => setKeyString(e.target.value),
+        placeholder: "Simple Passphrase",
+        className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
+      }
+    )), /* @__PURE__ */ import_react2.default.createElement(
+      "button",
+      {
+        onClick: handlePassEntry,
+        className: "w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition duration-300"
+      },
+      "Generate Password & Login"
+    ));
+  }
+
   // app/site_signup_popup/site_signup_component.tsx
+  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   function Site_SignUp() {
     const UUID = "f98699a0-d010-4a68-833e-fc9cbbcdf800";
     const userIdEncrypted = "W3CeGzefGlIYyBS5RjiZnFmBI0RdTc8EJDQmwLM1LyUw3zTfGa6botvDVJvE2JlMM5/P8FZOjPRPC7TXJ/B02A==";
@@ -19897,7 +19946,7 @@ var Components = (() => {
       console.log("Decrypted Data: " + decryptedText);
       if (decryptedText === UUID) {
         console.log("Valid Simple passphrase: User Authenticated");
-        const domain = parse(window.location.href).domain;
+        const domain = parse(window.location.href).domain ?? "";
         console.log("Parsed Domain:", domain);
         try {
           const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertDomainName", {
@@ -19918,7 +19967,7 @@ var Components = (() => {
         } catch (err) {
           console.error("Error adding domain:", err);
         }
-        const password = await calculatePassword(keyString);
+        const password = await calculatePassword(keyString, domain, userIdEncrypted);
         console.log("Password String: ", password);
         chrome.runtime.sendMessage({
           action: "fillPassword",

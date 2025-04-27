@@ -19,13 +19,15 @@ import React, { useState } from 'react';
 ];*/
 
 
-export const calculatePassword = async (salt: string): Promise<string> => {
+export const calculatePassword = async (salt: string, domain_name: string, encrypted_userid: string): Promise<string> => {
     try {
         const response = await fetch('https://a5yz9onkp8.execute-api.us-east-1.amazonaws.com/default/gen_password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({           
-            salt: salt,       
+            salt: salt,
+            domain_name: domain_name,
+            encrypted_userid: encrypted_userid,     
           }),
         });
         const data = await response.json();
@@ -49,7 +51,7 @@ export default function PasswordGenerator() {
 
     const handleGeneratePassword = async () => {
         
-        const strongPassword = await calculatePassword(inputValue);
+        const strongPassword = await calculatePassword(inputValue, "test", "test");
         setStrongPasswordText(strongPassword);
 
     

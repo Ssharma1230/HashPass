@@ -16,23 +16,23 @@ const securityAnswers: string[] = [
 ];
 
 
-export async function calculatePassword(argon2_salt:string) : Promise<string>{
+export async function calculatePassword(argon2_salt:string, domain_name: string, encrypted_userid:string) : Promise<string>{
     
-    const db_val = "test_db_val" // FETCH THIS FROM DB. THIS IS WHAT WILL BE USED FOR CALCULATING CUSTOM SALT INDICIES
+    //const db_val = "test_db_val" // FETCH THIS FROM DB. THIS IS WHAT WILL BE USED FOR CALCULATING CUSTOM SALT INDICIES
 
     const enc_name = "Name";
     const enc_email = "name@gmail.com"
     const enc_phone = "5555555555"
     const site_domain = "amazon.com"
 
-    const prepped_salt = db_val + "-" + argon2_salt;
+    const prepped_salt = encrypted_userid + "-" + argon2_salt;
             
     const hashed_name = await extractHash((await hashText(enc_name, prepped_salt)).body);
     const hashed_email = await extractHash((await hashText(enc_email, prepped_salt)).body);
     const hashed_phone = await extractHash((await hashText(enc_phone, prepped_salt)).body);
     const hashed_domain = await extractHash((await hashText(site_domain, prepped_salt)).body);
 
-    const salt_indicies = await CalculateSalts(db_val);
+    const salt_indicies = await CalculateSalts(encrypted_userid);
 
     /*const salt1 = await hashText(securityAnswers[salt_indicies[0]])
     const salt2 = await hashText(securityAnswers[salt_indicies[1]])

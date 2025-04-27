@@ -21,8 +21,10 @@ const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyRe
         const body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
 
         const salt: string = body.salt;
+        const domain_name: string = body.domain_name;
+        const encrypted_userid: string = body.encrypted_userid;
 
-        const strong_password = await calculatePassword(salt);
+        const strong_password = await calculatePassword(salt, domain_name, encrypted_userid);
 
         /*const hashValue = await argon2.hash(dataToHash, {
           salt: slt,

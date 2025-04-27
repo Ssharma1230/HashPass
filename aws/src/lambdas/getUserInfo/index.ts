@@ -29,7 +29,7 @@ export const handler = async (event: APIGatewayEvent) => {
 
     try {
       const connection = await createConnection(dbConfig);
-      const [rows] = await connection.execute('SELECT enc_email, enc_name, enc_phone_num FROM users WHERE uuid = ?', [UUID]);
+      const [rows] = await connection.execute('SELECT enc_uuid, enc_email, enc_name, enc_phone_num FROM users WHERE uuid = ?', [UUID]);
       await connection.end();
   
       return {

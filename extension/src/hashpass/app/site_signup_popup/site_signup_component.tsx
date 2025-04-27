@@ -22,7 +22,7 @@ export default function Site_SignUp() {
     if(decryptedText === UUID){
       console.log("Valid Simple passphrase: User Authenticated")
 
-      const domain = parse(window.location.href).domain;
+      const domain = parse(window.location.href).domain ?? "";
       console.log("Parsed Domain:", domain);
       try {
         const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertDomainName", {
@@ -44,7 +44,7 @@ export default function Site_SignUp() {
         console.error("Error adding domain:", err);
       }
 
-      const password = await calculatePassword(keyString);
+      const password = await calculatePassword(keyString, domain, userIdEncrypted);
       console.log("Password String: ", password)
 
       chrome.runtime.sendMessage({
