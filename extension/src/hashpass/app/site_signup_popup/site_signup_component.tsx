@@ -6,7 +6,7 @@ import { parse } from "tldts";
 import { getEncryptedUuid } from '../site_login_popup/site_login_component';
 
 export default function Site_SignUp() {
-    const userId = "randomuuid";
+    const UUID = "randomuuid";
 
     const [keyString, setKeyString] = useState("");
     const [loading, setLoading] = useState(false);
@@ -19,9 +19,9 @@ export default function Site_SignUp() {
         setSpinnerMessage('Generating Password...');
         
         try {
-            const userIdEncrypted = await getEncryptedUuid(userId);
+            const userIdEncrypted = await getEncryptedUuid(UUID);
             const decryptedText = await decrypt(userIdEncrypted, keyString);
-            if (decryptedText === userId) {
+            if (decryptedText === UUID) {
                 console.log("Valid Simple passphrase: User Authenticated");
                 
                 const domain = parse(window.location.href).domain ?? "";
@@ -33,9 +33,14 @@ export default function Site_SignUp() {
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({ userId, domain })
+                        body: JSON.stringify({ UUID, domain })
                     });
 
+                    if (response.status === 401) {
+                      console.log("Duplicate entry detected, launching login popup...");
+                      chrome.runtime.sendMessage({ action: "detected_login_form" });
+                      return;
+                    }
                     if (!response.ok) {
                         throw new Error("Failed to add domain to DB");
                     }
