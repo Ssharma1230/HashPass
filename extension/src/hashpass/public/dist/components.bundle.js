@@ -19866,6 +19866,7 @@ var Components = (() => {
     const [spinnerMessage, setSpinnerMessage] = (0, import_react2.useState)("");
     const [generatedPassword, setGeneratedPassword] = (0, import_react2.useState)("");
     const [showPassword, setShowPassword] = (0, import_react2.useState)(false);
+    const [blockSuccessMessage, setBlockSuccessMessage] = (0, import_react2.useState)("");
     const handlePassEntry = async () => {
       setLoading(true);
       setSpinnerMessage("Generating Password...");
@@ -19896,7 +19897,46 @@ var Components = (() => {
     const copyToClipboard = () => {
       navigator.clipboard.writeText(generatedPassword).then(() => alert("Password copied to clipboard!")).catch((error) => alert("Failed to copy password: " + error));
     };
-    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Log In with HashPass"), loading ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "flex justify-center items-center" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "spinner" }), /* @__PURE__ */ import_react2.default.createElement("p", { className: "ml-2" }, spinnerMessage)) : generatedPassword ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "text-center" }, /* @__PURE__ */ import_react2.default.createElement("p", { className: "text-gray-800 mb-4 font-semibold" }, "Password Entered"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-4" }, /* @__PURE__ */ import_react2.default.createElement(
+    const blockWebsite = async () => {
+      setLoading(true);
+      setSpinnerMessage("Blocking website...");
+      try {
+        const userIdEncrypted = await getEncryptedUuid(userId);
+        const decryptedText = await decrypt(userIdEncrypted, keyString);
+        if (decryptedText === userId) {
+          console.log("Valid Simple Passphrase: User Authenticated");
+          const domain = parse(window.location.href).domain ?? "";
+          console.log("Parsed Domain:", domain);
+          const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertBlockedDomain", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uuid: userId, domain })
+          });
+          if (!response.ok) {
+            if (response.status === 401) {
+              setBlockSuccessMessage(`This website is already blocked.`);
+            } else {
+              throw new Error("Failed to block website");
+            }
+          } else {
+            const result = await response.json();
+            console.log("Website successfully blocked:", result);
+            setBlockSuccessMessage(`Successfully blocked ${domain}`);
+          }
+        } else {
+          console.log("Invalid Simple Passphrase");
+        }
+      } catch (err) {
+        console.error("Error blocking website:", err);
+        if (!blockSuccessMessage) {
+          setBlockSuccessMessage("Failed to block website. Please try again.");
+        }
+      } finally {
+        setLoading(false);
+        setSpinnerMessage("");
+      }
+    };
+    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] min-h-[600px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative flex flex-col justify-between" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Log In with HashPass"), loading ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "flex justify-center items-center" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "spinner" }), /* @__PURE__ */ import_react2.default.createElement("p", { className: "ml-2" }, spinnerMessage)) : blockSuccessMessage ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "text-center" }, /* @__PURE__ */ import_react2.default.createElement("p", { className: "text-gray-800 mb-4 font-semibold" }, blockSuccessMessage)) : generatedPassword ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "text-center" }, /* @__PURE__ */ import_react2.default.createElement("p", { className: "text-gray-800 mb-4 font-semibold" }, "Password Entered"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-4" }, /* @__PURE__ */ import_react2.default.createElement(
       "input",
       {
         type: "text",
@@ -19934,6 +19974,14 @@ var Components = (() => {
         className: "w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition duration-300"
       },
       "Generate Password & Login"
+    ), /* @__PURE__ */ import_react2.default.createElement(
+      "button",
+      {
+        onClick: blockWebsite,
+        style: { outline: "2px solid red", background: "red", color: "white" },
+        className: "w-full py-2 rounded-lg font-medium hover:bg-red-600 transition duration-300 mt-4"
+      },
+      "Block This Website"
     )));
   }
 
