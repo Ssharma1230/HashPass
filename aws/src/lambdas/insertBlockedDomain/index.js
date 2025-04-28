@@ -64,7 +64,7 @@ const handler = async (event) => {
     catch (error) {
         console.error("Error inserting data:", error);
         return {
-            statusCode: 400,
+            statusCode: 401,
             body: JSON.stringify({ message: "Error with DB" })
         };
     }
