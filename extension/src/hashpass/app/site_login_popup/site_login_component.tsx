@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { decrypt } from "../security_components/tools/AES_tool";
 import { calculatePassword } from '../security_components/components/password_generator';
 import { parse } from "tldts";
@@ -33,7 +33,7 @@ export async function getEncryptedUuid(uuid: string): Promise<string> {
 }
 
 export default function Site_LogIn() {
-    const userId = "randomuuid"; // This value will be the user's id in plaintext (retrieved from cache)
+    // This value will be the user's id in plaintext (retrieved from cache)
     //const userIdEncrypted = "8gb2BSJbvxtRs53WGHs6jBoVBztcA03gIFv8t8Bm/CLt6fGKkEY="; // This value will be the user's id in ciphertext (retrieved from DB)
     
 
@@ -43,9 +43,28 @@ export default function Site_LogIn() {
     const [generatedPassword, setGeneratedPassword] = useState(""); // State to store the generated password
     const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
+    const [userId, setUserId] = useState("");
+        
+    useEffect(() => {
+        async function fetchUUID(): Promise<string>{
+            return new Promise((resolve) => {
+                chrome.storage.sync.get(["uuid"], (result) => {
+                    const userId = result.uuid || "";
+                    resolve(userId);
+                });
+            });
+        }
+        
+        // Set the UUID from storage
+        fetchUUID().then((fetchedUuid) => {
+            setUserId(fetchedUuid);
+        });
+    }, []);
+
     const handlePassEntry = async () => {
         setLoading(true);
         setSpinnerMessage('Generating Password...');
+        console.log("UUID: ", userId);
 
         try {
             const userIdEncrypted = await getEncryptedUuid(userId);
