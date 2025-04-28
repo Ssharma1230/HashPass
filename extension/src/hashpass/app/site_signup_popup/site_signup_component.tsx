@@ -7,36 +7,34 @@ import { parse } from "tldts";
 import { getEncryptedUuid } from '../site_login_popup/site_login_component';
 
 export default function Site_SignUp() {
-    const userId = "randomuuid";
-
     const [keyString, setKeyString] = useState("");
     const [loading, setLoading] = useState(false);
     const [generatedPassword, setGeneratedPassword] = useState(""); // Store generated password
     const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
     const [spinnerMessage, setSpinnerMessage] = useState('');
 
-    const [uuid, setUuid] = useState("");
+    const [userId, setUserId] = useState("");
     
     useEffect(() => {
         async function fetchUUID(): Promise<string>{
             return new Promise((resolve) => {
                 chrome.storage.sync.get(["uuid"], (result) => {
-                    const uuid = result.uuid || "";
-                    resolve(uuid);
+                    const userId = result.uuid || "";
+                    resolve(userId);
                 });
             });
         }
         
         // Set the UUID from storage
         fetchUUID().then((fetchedUuid) => {
-            setUuid(fetchedUuid);
+            setUserId(fetchedUuid);
         });
     }, []); // Empty dependency array means this runs once when the component mounts
 
     const handlePassEntry = async () => {
         setLoading(true);
         setSpinnerMessage('Generating Password...');
-        console.log("UUID: ", uuid);
+        console.log("UUID: ", userId);
         
         try {
             const userIdEncrypted = await getEncryptedUuid(userId);
