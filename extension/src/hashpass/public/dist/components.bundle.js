@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use strict";
 var Components = (() => {
   var __create = Object.create;
@@ -19296,12 +19297,11 @@ var Components = (() => {
     renderSiteLogIn: () => renderSiteLogIn,
     renderSiteSignUp: () => renderSiteSignUp
   });
-  var import_react6 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // app/site_login_popup/site_login_component.tsx
   var import_react2 = __toESM(require_react(), 1);
-  var import_react3 = __toESM(require_react(), 1);
 
   // app/security_components/tools/hashing_tool.tsx
   var hashText = async (text) => {
@@ -19861,58 +19861,65 @@ var Components = (() => {
     }
   }
   function Site_LogIn() {
-    const [keyString, setKeyString] = (0, import_react3.useState)("");
-    const [userIdEncrypted, setUserIdEncrypted] = (0, import_react3.useState)(null);
-    const [loading, setLoading] = (0, import_react3.useState)(true);
-    const userId = "testuserid";
-    const domain = parse(window.location.href).domain ?? "";
-    (0, import_react3.useEffect)(() => {
-      let isMounted = true;
-      async function fetchEncrypted() {
-        try {
-          const enc = await getEncryptedUuid(userId);
-          if (isMounted) {
-            setUserIdEncrypted(enc);
-          }
-        } catch (err) {
-          console.error("Failed to fetch encrypted UUID:", err);
-        } finally {
-          if (isMounted) setLoading(false);
-        }
-      }
-      fetchEncrypted();
-      return () => {
-        isMounted = false;
-      };
-    }, [userId]);
+    const userId = "randomuuid";
+    const [keyString, setKeyString] = (0, import_react2.useState)("");
+    const [loading, setLoading] = (0, import_react2.useState)(false);
+    const [spinnerMessage, setSpinnerMessage] = (0, import_react2.useState)("");
+    const [generatedPassword, setGeneratedPassword] = (0, import_react2.useState)("");
+    const [showPassword, setShowPassword] = (0, import_react2.useState)(false);
     const handlePassEntry = async () => {
-      if (!userIdEncrypted) return;
-      console.log("Generate password button clicked");
-      console.log("Key String:", keyString);
-      console.log("userIdEncrypted:", userIdEncrypted);
-      const decryptedText = await decrypt(userIdEncrypted, keyString);
-      console.log("Decrypted Data:", decryptedText);
-      if (decryptedText === userId) {
-        console.log("Valid Simple passphrase: User Authenticated");
-        const password = await calculatePassword(keyString, domain, userIdEncrypted);
-        console.log("Password String:", password);
-        chrome.runtime.sendMessage(
-          {
+      setLoading(true);
+      setSpinnerMessage("Generating Password...");
+      try {
+        const userIdEncrypted = await getEncryptedUuid(userId);
+        console.log("User ID encrypted: ", userIdEncrypted);
+        const domain = parse(window.location.href).domain ?? "";
+        const decryptedText = await decrypt(userIdEncrypted, keyString);
+        if (decryptedText === userId) {
+          const password = await calculatePassword(keyString, domain, userIdEncrypted);
+          setGeneratedPassword(password);
+          chrome.runtime.sendMessage({
             action: "fillPassword",
             passphrase: password
-          },
-          (response) => {
+          }, (response) => {
             console.log("Message acknowledged by service worker", response);
-          }
-        );
-      } else {
-        console.log("Invalid Simple Passphrase");
+          });
+        } else {
+          console.log("Invalid Simple Passphrase");
+        }
+      } catch (error) {
+        console.error("Error during password handling:", error);
+      } finally {
+        setLoading(false);
+        setSpinnerMessage("");
       }
     };
-    if (loading) {
-      return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl text-center" }, /* @__PURE__ */ import_react2.default.createElement("p", null, "Loading\u2026"));
-    }
-    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Log In with HashPass"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
+    const copyToClipboard = () => {
+      navigator.clipboard.writeText(generatedPassword).then(() => alert("Password copied to clipboard!")).catch((error) => alert("Failed to copy password: " + error));
+    };
+    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Log In with HashPass"), loading ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "flex justify-center items-center" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "spinner" }), /* @__PURE__ */ import_react2.default.createElement("p", { className: "ml-2" }, spinnerMessage)) : generatedPassword ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "text-center" }, /* @__PURE__ */ import_react2.default.createElement("p", { className: "text-gray-800 mb-4 font-semibold" }, "Password Entered"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-4" }, /* @__PURE__ */ import_react2.default.createElement(
+      "input",
+      {
+        type: "text",
+        value: showPassword ? generatedPassword : "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+        readOnly: true,
+        className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
+      }
+    )), /* @__PURE__ */ import_react2.default.createElement(
+      "button",
+      {
+        onClick: () => setShowPassword(!showPassword),
+        className: "w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition duration-300 mb-4"
+      },
+      showPassword ? "Hide Password" : "Show Password"
+    ), /* @__PURE__ */ import_react2.default.createElement(
+      "button",
+      {
+        onClick: copyToClipboard,
+        className: "w-full bg-green-500 text-white py-2 rounded-lg font-medium hover:bg-green-600 transition duration-300"
+      },
+      "Copy to Clipboard"
+    )) : /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
       "input",
       {
         type: "text",
@@ -19928,58 +19935,88 @@ var Components = (() => {
         className: "w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition duration-300"
       },
       "Generate Password & Login"
-    ));
+    )));
   }
 
   // app/site_signup_popup/site_signup_component.tsx
-  var import_react4 = __toESM(require_react(), 1);
-  var import_react5 = __toESM(require_react(), 1);
+  var import_react3 = __toESM(require_react(), 1);
   function Site_SignUp() {
-    const UUID = "f98699a0-d010-4a68-833e-fc9cbbcdf800";
-    const userIdEncrypted = "W3CeGzefGlIYyBS5RjiZnFmBI0RdTc8EJDQmwLM1LyUw3zTfGa6botvDVJvE2JlMM5/P8FZOjPRPC7TXJ/B02A==";
-    const [keyString, setKeyString] = (0, import_react5.useState)("");
+    const userId = "randomuuid";
+    const [keyString, setKeyString] = (0, import_react3.useState)("");
+    const [loading, setLoading] = (0, import_react3.useState)(false);
+    const [generatedPassword, setGeneratedPassword] = (0, import_react3.useState)("");
+    const [showPassword, setShowPassword] = (0, import_react3.useState)(false);
+    const [spinnerMessage, setSpinnerMessage] = (0, import_react3.useState)("");
     const handlePassEntry = async () => {
-      console.log("Generate password button clicked");
-      console.log("Key String: " + keyString);
-      console.log("userIdEncrypted: " + userIdEncrypted);
-      const decryptedText = await decrypt(userIdEncrypted, keyString);
-      console.log("Decrypted Data: " + decryptedText);
-      if (decryptedText === UUID) {
-        console.log("Valid Simple passphrase: User Authenticated");
-        const domain = parse(window.location.href).domain ?? "";
-        console.log("Parsed Domain:", domain);
-        try {
-          const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertDomainName", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              UUID,
-              domain
-            })
-          });
-          if (!response.ok) {
-            throw new Error("Failed to add domain to DB");
+      setLoading(true);
+      setSpinnerMessage("Generating Password...");
+      try {
+        const userIdEncrypted = await getEncryptedUuid(userId);
+        const decryptedText = await decrypt(userIdEncrypted, keyString);
+        if (decryptedText === userId) {
+          console.log("Valid Simple passphrase: User Authenticated");
+          const domain = parse(window.location.href).domain ?? "";
+          console.log("Parsed Domain:", domain);
+          try {
+            const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertDomainName", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ userId, domain })
+            });
+            if (!response.ok) {
+              throw new Error("Failed to add domain to DB");
+            }
+            const result = await response.json();
+            console.log("Domain successfully added:", result);
+          } catch (err) {
+            console.error("Error adding domain:", err);
           }
-          const result = await response.json();
-          console.log("Domain successfully added:", result);
-        } catch (err) {
-          console.error("Error adding domain:", err);
+          const password = await calculatePassword(keyString, domain, userIdEncrypted);
+          setGeneratedPassword(password);
+          chrome.runtime.sendMessage({
+            action: "fillPassword",
+            passphrase: password
+          }, (response) => {
+            console.log("Message acknowledged by service worker", response);
+          });
+        } else {
+          console.log("Invalid Simple Passphrase");
         }
-        const password = await calculatePassword(keyString, domain, userIdEncrypted);
-        console.log("Password String: ", password);
-        chrome.runtime.sendMessage({
-          action: "fillPassword",
-          passphrase: password
-        }, (response) => {
-          console.log("Message acknowledged by service worker", response);
-        });
-      } else {
-        console.log("Invalid Simple Passphrase");
+      } catch (error) {
+        console.error("Error during password handling:", error);
+      } finally {
+        setLoading(false);
+        setSpinnerMessage("");
       }
     };
-    return /* @__PURE__ */ import_react4.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react4.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Sign Up with HashPass"), /* @__PURE__ */ import_react4.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react4.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react4.default.createElement(
+    const copyToClipboard = () => {
+      navigator.clipboard.writeText(generatedPassword).then(() => alert("Password copied to clipboard!")).catch((error) => alert("Failed to copy password: " + error));
+    };
+    return /* @__PURE__ */ import_react3.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react3.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Sign Up with HashPass"), loading ? /* @__PURE__ */ import_react3.default.createElement("div", { className: "flex justify-center items-center" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "spinner" }), /* @__PURE__ */ import_react3.default.createElement("p", { className: "ml-2" }, spinnerMessage)) : generatedPassword ? /* @__PURE__ */ import_react3.default.createElement("div", { className: "text-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "text-gray-800 mb-4 font-semibold" }, "Password Generated"), /* @__PURE__ */ import_react3.default.createElement("div", { className: "mb-4" }, /* @__PURE__ */ import_react3.default.createElement(
+      "input",
+      {
+        type: "text",
+        value: showPassword ? generatedPassword : "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+        readOnly: true,
+        className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
+      }
+    )), /* @__PURE__ */ import_react3.default.createElement(
+      "button",
+      {
+        onClick: () => setShowPassword(!showPassword),
+        className: "w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition duration-300 mb-4"
+      },
+      showPassword ? "Hide Password" : "Show Password"
+    ), /* @__PURE__ */ import_react3.default.createElement(
+      "button",
+      {
+        onClick: copyToClipboard,
+        className: "w-full bg-green-500 text-white py-2 rounded-lg font-medium hover:bg-green-600 transition duration-300"
+      },
+      "Copy to Clipboard"
+    )) : /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react3.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react3.default.createElement(
       "input",
       {
         type: "text",
@@ -19988,14 +20025,14 @@ var Components = (() => {
         placeholder: "Simple Passphrase",
         className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
       }
-    )), /* @__PURE__ */ import_react4.default.createElement(
+    )), /* @__PURE__ */ import_react3.default.createElement(
       "button",
       {
         onClick: handlePassEntry,
         className: "w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition duration-300"
       },
       "Generate Password to Sign Up"
-    ));
+    )));
   }
 
   // app/popup_components.tsx
@@ -20031,7 +20068,7 @@ var Components = (() => {
     };
     const root = (0, import_client.createRoot)(container);
     root.render(
-      /* @__PURE__ */ import_react6.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react6.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react6.default.createElement(Site_LogIn, null))
+      /* @__PURE__ */ import_react4.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react4.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react4.default.createElement(Site_LogIn, null))
     );
   }
   function renderSiteSignUp(container) {
@@ -20040,7 +20077,7 @@ var Components = (() => {
     };
     const root = (0, import_client.createRoot)(container);
     root.render(
-      /* @__PURE__ */ import_react6.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react6.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react6.default.createElement(Site_SignUp, null))
+      /* @__PURE__ */ import_react4.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react4.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react4.default.createElement(Site_SignUp, null))
     );
   }
   return __toCommonJS(popup_components_exports);

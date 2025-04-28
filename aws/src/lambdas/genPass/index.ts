@@ -26,15 +26,6 @@ const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyRe
 
         const strong_password = await calculatePassword(salt, domain_name, encrypted_userid);
 
-        /*const hashValue = await argon2.hash(dataToHash, {
-          salt: slt,
-          type: argon2.argon2id,
-          timeCost: 2,          // Number of iterations.
-          memoryCost: 65536,    // Memory in KiB.
-          hashLength: 32,       // Length of the resulting hash.
-          parallelism: 1,
-        });*/
-
 
         return {
           statusCode: 200,
@@ -58,5 +49,4 @@ const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyRe
         };
       }
 }; 
-
 module.exports = { handler };
