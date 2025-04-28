@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "npx tsc",
-        "zip": "(zip signup.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath signup.zip)",
+        "zip": "(zip -r signup.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath signup.zip)",
         "move": "(mv signup.zip ../../terraform || powershell Move-Item signup.zip ../../terraform)"
     },
     "devDependencies": {

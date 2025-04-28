@@ -1,11 +1,12 @@
 {
     "scripts": {
         "build": "npx tsc",
-        "zip": "(zip getUserInfo.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath getUserInfo.zip)",
+        "zip": "(zip -r getUserInfo.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath getUserInfo.zip)",
         "move": "(mv getUserInfo.zip ../../terraform || powershell Move-Item getUserInfo.zip ../../terraform)"
     },
     "devDependencies": {
-        "@types/aws-lambda": "^8.10.147",
+        "@types/aws-lambda": "^8.10.149",
+        "@types/node": "^22.15.2",
         "typescript": "^5.7.3"
     },
     "dependencies": {

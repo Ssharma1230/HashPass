@@ -6,7 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
 const handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null));
-    const httpMethod = event.requestContext.httpMethod;
+    let httpMethod;
+    try {
+        httpMethod = event.requestContext.http.method;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log("APIGatewayEvent");
+        }
+        httpMethod = event.httpMethod;
+    }
     if (httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,

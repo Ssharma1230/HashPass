@@ -7,9 +7,12 @@
     "dependencies": {
         "argon2": "^0.41.1",
         "aws-lambda": "^1.0.7",
-        "mathjs": "^14.4.0"
+        "mathjs": "^14.4.0",
+        "mysql2": "^3.14.1"
     },
     "scripts": {
-        "build": "tsc"
+        "build": "npx tsc",
+        "zip": "(zip -r genPass.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath genPass.zip)",
+        "move": "(mv genPass.zip ../../terraform || powershell Move-Item genPass.zip ../../terraform)"
     }
 }
