@@ -1,9 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const argon2_1 = __importDefault(require("argon2"));
+const password_generator_1 = require("./src/password_generator");
 const handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null));
     let httpMethod;
@@ -28,16 +25,19 @@ const handler = async (event) => {
         };
     }
     try {
-        const dataToHash = typeof event.body === 'string' ? event.body : JSON.stringify(event.body, null, 2);
-        const slt = Buffer.from('my-static-salt', 'utf8');
-        const hashValue = await argon2_1.default.hash(dataToHash, {
-            salt: slt,
-            type: argon2_1.default.argon2id,
-            timeCost: 2, // Number of iterations.
-            memoryCost: 65536, // Memory in KiB.
-            hashLength: 32, // Length of the resulting hash.
-            parallelism: 1,
-        });
+        //const dataToHash = typeof event.body === 'string' ? event.body : JSON.stringify(event.body, null, 2);
+        //const slt = 'my-static-salt'; // Figure out how to get this value from event as a json and stringify it like in the line above
+        const body = typeof event.body === "string" ? JSON.parse(event.body || "") : event.body;
+        const salt = body.salt;
+        const strong_password = await (0, password_generator_1.calculatePassword)(salt);
+        /*const hashValue = await argon2.hash(dataToHash, {
+          salt: slt,
+          type: argon2.argon2id,
+          timeCost: 2,          // Number of iterations.
+          memoryCost: 65536,    // Memory in KiB.
+          hashLength: 32,       // Length of the resulting hash.
+          parallelism: 1,
+        });*/
         return {
             statusCode: 200,
             headers: {
@@ -45,7 +45,7 @@ const handler = async (event) => {
                 'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type,Authorization'
             },
-            body: JSON.stringify({ hash: hashValue }),
+            body: JSON.stringify({ hash: strong_password }),
         };
     }
     catch (error) {
