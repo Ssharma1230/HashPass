@@ -19966,9 +19966,9 @@ var Components = (() => {
       setSpinnerMessage("Generating Password...");
       console.log("UUID: ", uuid);
       try {
-        const userIdEncrypted = await getEncryptedUuid(userId);
+        const userIdEncrypted = await getEncryptedUuid(UUID);
         const decryptedText = await decrypt(userIdEncrypted, keyString);
-        if (decryptedText === userId) {
+        if (decryptedText === UUID) {
           console.log("Valid Simple passphrase: User Authenticated");
           const domain = parse(window.location.href).domain ?? "";
           console.log("Parsed Domain:", domain);
@@ -19978,8 +19978,13 @@ var Components = (() => {
               headers: {
                 "Content-Type": "application/json"
               },
-              body: JSON.stringify({ userId, domain })
+              body: JSON.stringify({ UUID, domain })
             });
+            if (response.status === 401) {
+              console.log("Duplicate entry detected, launching login popup...");
+              chrome.runtime.sendMessage({ action: "detected_login_form" });
+              return;
+            }
             if (!response.ok) {
               throw new Error("Failed to add domain to DB");
             }

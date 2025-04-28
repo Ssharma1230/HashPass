@@ -27,6 +27,20 @@
 
 // Function to inject a login popup into the page using the bundled TSX component
 function injectLoginPopup() {
+  console.log("Injecting Login Popup...");
+
+  const existingSignup = document.getElementById('hashpass-signup-popup');
+  if (existingSignup) {
+    existingSignup.remove();
+    console.log("Existing signup popup removed.");
+  }
+
+  const existingLogin = document.getElementById('hashpass-login-popup');
+  if (existingLogin) {
+    existingLogin.remove();
+    console.log("Existing login popup removed.");
+  }
+  
   const host = document.createElement('div');
   host.id = 'hashpass-login-popup';
   host.style.position = 'fixed';
