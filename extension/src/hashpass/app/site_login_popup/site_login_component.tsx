@@ -1,14 +1,11 @@
-/* eslint-disable */
 'use client';
-import React from 'react';
-import { useState } from "react";
-import { decrypt } from "../security_components/tools/AES_tool"
-import {calculatePassword} from '../security_components/components/password_generator';
+import React, { useState } from 'react';
+import { decrypt } from "../security_components/tools/AES_tool";
+import { calculatePassword } from '../security_components/components/password_generator';
 
 export default function Site_LogIn() {
-    const userId = "testuserid" // This value will be the user's id in plaintext (retrieved from DB)
-    const userIdEncrypted = "8gb2BSJbvxtRs53WGHs6jBoVBztcA03gIFv8t8Bm/CLt6fGKkEY=" // This value will be the user's id in ciphertext (retrieved from DB)
-    //valid simple pass for testing is testkey
+    const userId = "testuserid"; // This value will be the user's id in plaintext (retrieved from DB)
+    const userIdEncrypted = "8gb2BSJbvxtRs53WGHs6jBoVBztcA03gIFv8t8Bm/CLt6fGKkEY="; // This value will be the user's id in ciphertext (retrieved from DB)
 
     const [keyString, setKeyString] = useState("");
     const [loading, setLoading] = useState(false);
@@ -20,28 +17,28 @@ export default function Site_LogIn() {
         setLoading(true);
         setSpinnerMessage('Generating Password...');
 
-      const decryptedText = await decrypt(userIdEncrypted, keyString);
-      console.log("Decrypted Data: " + decryptedText);
-
-
-      if(decryptedText === userId){
-        console.log("Valid Simple passphrase: User Authenticated")
-        const password = await calculatePassword(keyString);
-        console.log("Password String: ",password)
-
-        chrome.runtime.sendMessage({
-          action: "fillPassword",
-          passphrase: password
-        }, (response) => {
-          console.log("Message acknowledged by service worker", response);
-        });
-      }
-      else{
-        console.log("Invalid Simple Passphrase")
-      }
+        try {
+            const decryptedText = await decrypt(userIdEncrypted, keyString);
+            if (decryptedText === userId) {
+                const password = await calculatePassword(keyString, "test", "test");
+                setGeneratedPassword(password);
+            } else {
+                console.log("Invalid Simple Passphrase");
+            }
+        } catch (error) {
+            console.error("Error during password handling:", error);
+        } finally {
+            setLoading(false);
+            setSpinnerMessage('');
+        }
     };
-    
-    
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(generatedPassword)
+            .then(() => alert("Password copied to clipboard!"))
+            .catch((error) => alert("Failed to copy password: " + error));
+    };
+
     return (
         <div className="w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
