@@ -19385,15 +19385,13 @@ var Components = (() => {
 
   // app/security_components/components/password_generator.tsx
   var import_react = __toESM(require_react(), 1);
-  var calculatePassword = async (salt, domain_name, encrypted_userid) => {
+  var calculatePassword = async (salt) => {
     try {
       const response = await fetch("https://a5yz9onkp8.execute-api.us-east-1.amazonaws.com/default/gen_password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          salt,
-          domain_name,
-          encrypted_userid
+          salt
         })
       });
       const data = await response.json();
@@ -19404,8 +19402,6 @@ var Components = (() => {
     }
   };
 
-<<<<<<< HEAD
-=======
   // app/site_login_popup/site_login_component.tsx
   function Site_LogIn() {
     const userId = "testuserid";
@@ -19480,7 +19476,6 @@ var Components = (() => {
   // app/site_signup_popup/site_signup_component.tsx
   var import_react3 = __toESM(require_react(), 1);
 
->>>>>>> main
   // node_modules/tldts-core/dist/es6/src/domain.js
   function shareSameDomainSuffix(hostname, vhost) {
     if (hostname.endsWith(vhost)) {
@@ -19914,38 +19909,6 @@ var Components = (() => {
     return parseImpl(url, 5, suffixLookup, options, getEmptyResult());
   }
 
-<<<<<<< HEAD
-  // app/site_login_popup/site_login_component.tsx
-  async function getEncryptedUuid(uuid) {
-    const API_URL = "https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/getUserInfo";
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        // or GET if your endpoint supports it
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ UUID: uuid })
-      });
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status} ${response.statusText}`);
-      }
-      const rows = await response.json();
-      if (!Array.isArray(rows) || rows.length === 0) {
-        throw new Error("No user found for the given UUID");
-      }
-      return rows[0].enc_uuid;
-    } catch (err) {
-      console.error("getEncryptedUuid error:", err);
-      throw err;
-    }
-  }
-  function Site_LogIn() {
-    const userId = "randomuuid";
-    const [keyString, setKeyString] = (0, import_react2.useState)("");
-    const [loading, setLoading] = (0, import_react2.useState)(false);
-    const [spinnerMessage, setSpinnerMessage] = (0, import_react2.useState)("");
-    const [generatedPassword, setGeneratedPassword] = (0, import_react2.useState)("");
-    const [showPassword, setShowPassword] = (0, import_react2.useState)(false);
-=======
   // app/site_signup_popup/site_signup_component.tsx
   function Site_SignUp() {
     const UUID = "f98699a0-d010-4a68-833e-fc9cbbcdf800";
@@ -19955,19 +19918,10 @@ var Components = (() => {
     const [generatedPassword, setGeneratedPassword] = (0, import_react3.useState)("");
     const [showPassword, setShowPassword] = (0, import_react3.useState)(false);
     const [spinnerMessage, setSpinnerMessage] = (0, import_react3.useState)("");
->>>>>>> main
     const handlePassEntry = async () => {
       setLoading(true);
       setSpinnerMessage("Generating Password...");
       try {
-<<<<<<< HEAD
-        const userIdEncrypted = await getEncryptedUuid(userId);
-        console.log("User ID encrypted: ", userIdEncrypted);
-        const domain = parse(window.location.href).domain ?? "";
-        const decryptedText = await decrypt(userIdEncrypted, keyString);
-        if (decryptedText === userId) {
-          const password = await calculatePassword(keyString, domain, userIdEncrypted);
-=======
         const decryptedText = await decrypt(userIdEncrypted, keyString);
         if (decryptedText === UUID) {
           console.log("Valid Simple passphrase: User Authenticated");
@@ -19990,121 +19944,6 @@ var Components = (() => {
             console.error("Error adding domain:", err);
           }
           const password = await calculatePassword(keyString);
->>>>>>> main
-          setGeneratedPassword(password);
-          chrome.runtime.sendMessage({
-            action: "fillPassword",
-            passphrase: password
-          }, (response) => {
-            console.log("Message acknowledged by service worker", response);
-          });
-        } else {
-          console.log("Invalid Simple Passphrase");
-        }
-      } catch (error) {
-        console.error("Error during password handling:", error);
-      } finally {
-        setLoading(false);
-        setSpinnerMessage("");
-      }
-    };
-    const copyToClipboard = () => {
-      navigator.clipboard.writeText(generatedPassword).then(() => alert("Password copied to clipboard!")).catch((error) => alert("Failed to copy password: " + error));
-    };
-<<<<<<< HEAD
-    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Log In with HashPass"), loading ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "flex justify-center items-center" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "spinner" }), /* @__PURE__ */ import_react2.default.createElement("p", { className: "ml-2" }, spinnerMessage)) : generatedPassword ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "text-center" }, /* @__PURE__ */ import_react2.default.createElement("p", { className: "text-gray-800 mb-4 font-semibold" }, "Password Entered"), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-4" }, /* @__PURE__ */ import_react2.default.createElement(
-=======
-    return /* @__PURE__ */ import_react3.default.createElement("div", { className: "w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative" }, /* @__PURE__ */ import_react3.default.createElement("h2", { className: "text-2xl font-semibold text-gray-800 mb-6 text-center" }, "Sign Up with HashPass"), loading ? /* @__PURE__ */ import_react3.default.createElement("div", { className: "flex justify-center items-center" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "spinner" }), /* @__PURE__ */ import_react3.default.createElement("p", { className: "ml-2" }, spinnerMessage)) : generatedPassword ? /* @__PURE__ */ import_react3.default.createElement("div", { className: "text-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "text-gray-800 mb-4 font-semibold" }, "Password Generated"), /* @__PURE__ */ import_react3.default.createElement("div", { className: "mb-4" }, /* @__PURE__ */ import_react3.default.createElement(
->>>>>>> main
-      "input",
-      {
-        type: "text",
-        value: showPassword ? generatedPassword : "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
-        readOnly: true,
-        className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
-      }
-<<<<<<< HEAD
-    )), /* @__PURE__ */ import_react2.default.createElement(
-=======
-    )), /* @__PURE__ */ import_react3.default.createElement(
->>>>>>> main
-      "button",
-      {
-        onClick: () => setShowPassword(!showPassword),
-        className: "w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition duration-300 mb-4"
-      },
-      showPassword ? "Hide Password" : "Show Password"
-<<<<<<< HEAD
-    ), /* @__PURE__ */ import_react2.default.createElement(
-=======
-    ), /* @__PURE__ */ import_react3.default.createElement(
->>>>>>> main
-      "button",
-      {
-        onClick: copyToClipboard,
-        className: "w-full bg-green-500 text-white py-2 rounded-lg font-medium hover:bg-green-600 transition duration-300"
-      },
-      "Copy to Clipboard"
-<<<<<<< HEAD
-    )) : /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
-=======
-    )) : /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react3.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react3.default.createElement(
->>>>>>> main
-      "input",
-      {
-        type: "text",
-        value: keyString,
-        onChange: (e) => setKeyString(e.target.value),
-        placeholder: "Simple Passphrase",
-        className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
-      }
-<<<<<<< HEAD
-    )), /* @__PURE__ */ import_react2.default.createElement(
-      "button",
-      {
-        onClick: handlePassEntry,
-        className: "w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 transition duration-300"
-      },
-      "Generate Password & Login"
-    )));
-  }
-
-  // app/site_signup_popup/site_signup_component.tsx
-  var import_react3 = __toESM(require_react(), 1);
-  function Site_SignUp() {
-    const userId = "randomuuid";
-    const [keyString, setKeyString] = (0, import_react3.useState)("");
-    const [loading, setLoading] = (0, import_react3.useState)(false);
-    const [generatedPassword, setGeneratedPassword] = (0, import_react3.useState)("");
-    const [showPassword, setShowPassword] = (0, import_react3.useState)(false);
-    const [spinnerMessage, setSpinnerMessage] = (0, import_react3.useState)("");
-    const handlePassEntry = async () => {
-      setLoading(true);
-      setSpinnerMessage("Generating Password...");
-      try {
-        const userIdEncrypted = await getEncryptedUuid(userId);
-        const decryptedText = await decrypt(userIdEncrypted, keyString);
-        if (decryptedText === userId) {
-          console.log("Valid Simple passphrase: User Authenticated");
-          const domain = parse(window.location.href).domain ?? "";
-          console.log("Parsed Domain:", domain);
-          try {
-            const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertDomainName", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({ userId, domain })
-            });
-            if (!response.ok) {
-              throw new Error("Failed to add domain to DB");
-            }
-            const result = await response.json();
-            console.log("Domain successfully added:", result);
-          } catch (err) {
-            console.error("Error adding domain:", err);
-          }
-          const password = await calculatePassword(keyString, domain, userIdEncrypted);
           setGeneratedPassword(password);
           chrome.runtime.sendMessage({
             action: "fillPassword",
@@ -20156,8 +19995,6 @@ var Components = (() => {
         placeholder: "Simple Passphrase",
         className: "w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
       }
-=======
->>>>>>> main
     )), /* @__PURE__ */ import_react3.default.createElement(
       "button",
       {
