@@ -14,62 +14,53 @@ export default function Site_SignUp() {
     const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
     const [spinnerMessage, setSpinnerMessage] = useState('');
 
-    const handlePassEntry = async () => {
-        setLoading(true);
-        setSpinnerMessage('Generating Password...');
-        
-        try {
-            const userIdEncrypted = await getEncryptedUuid(userId);
-            const decryptedText = await decrypt(userIdEncrypted, keyString);
-            if (decryptedText === userId) {
-                console.log("Valid Simple passphrase: User Authenticated");
-                
-                const domain = parse(window.location.href).domain ?? "";
-                console.log("Parsed Domain:", domain);
+  const handlePassEntry = async () => {
+    console.log("Generate password button clicked");
+    console.log("Key String: " + keyString);
+    console.log("userIdEncrypted: " + userIdEncrypted)
 
-                try {
-                    const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertDomainName", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ userId, domain })
-                    });
+    const decryptedText = await decrypt(userIdEncrypted, keyString);
+    console.log("Decrypted Data: " + decryptedText);
 
-                    if (!response.ok) {
-                        throw new Error("Failed to add domain to DB");
-                    }
-                    const result = await response.json();
-                    console.log("Domain successfully added:", result);
-                } catch (err) {
-                    console.error("Error adding domain:", err);
-                }
+    if(decryptedText === UUID){
+      console.log("Valid Simple passphrase: User Authenticated")
 
-                // Generate password after success
-                const password = await calculatePassword(keyString, domain, userIdEncrypted);
-                setGeneratedPassword(password);
-                chrome.runtime.sendMessage({
-                  action: "fillPassword",
-                  passphrase: password
-                }, (response) => {
-                  console.log("Message acknowledged by service worker", response);
-                });
-            } else {
-                console.log("Invalid Simple Passphrase");
-            }
-        } catch (error) {
-            console.error("Error during password handling:", error);
-        } finally {
-            setLoading(false);
-            setSpinnerMessage('');
+      const domain = parse(window.location.href).domain;
+      console.log("Parsed Domain:", domain);
+      try {
+        const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/insertDomainName", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            UUID,
+            domain
+          })
+        });
+        if (!response.ok) {
+          throw new Error("Failed to add domain to DB");
         }
-    };
+        const result = await response.json();
+        console.log("Domain successfully added:", result);
+      } catch (err) {
+        console.error("Error adding domain:", err);
+      }
 
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(generatedPassword)
-            .then(() => alert("Password copied to clipboard!"))
-            .catch((error) => alert("Failed to copy password: " + error));
-    };
+      const password = await calculatePassword(keyString);
+      console.log("Password String: ", password)
+
+      chrome.runtime.sendMessage({
+        action: "fillPassword",
+        passphrase: password
+      }, (response) => {
+        console.log("Message acknowledged by service worker", response);
+      });
+    }
+    else{
+      console.log("Invalid Simple Passphrase")
+    }
+  };
 
     return (
         <div className="w-[350px] mt-4 p-6 bg-white shadow-2xl rounded-2xl relative">
