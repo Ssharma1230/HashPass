@@ -43,6 +43,7 @@ export const handler = async (event: APIGatewayEvent | APIGatewayProxyEventV2 ):
   }
 
   const { UUID, domain } = request_body;
+  console.log(UUID, domain);
 
   try {
     const connection = await createConnection(dbConfig);

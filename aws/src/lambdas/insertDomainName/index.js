@@ -43,6 +43,7 @@ const handler = async (event) => {
         };
     }
     const { UUID, domain } = request_body;
+    console.log(UUID, domain);
     try {
         const connection = await (0, promise_1.createConnection)(dbConfig);
         const [rows] = await connection.execute('SELECT 1 FROM users WHERE uuid = ? LIMIT 1', [UUID]);
