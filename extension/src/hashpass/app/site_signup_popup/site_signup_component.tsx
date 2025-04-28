@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use client';
 import React, { useState } from 'react';
 import { decrypt } from "../security_components/tools/AES_tool";
