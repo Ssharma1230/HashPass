@@ -65,7 +65,7 @@ const handler = async (event: APIGatewayEvent | APIGatewayProxyEventV2): Promise
     } catch (error) {
         console.error("Error inserting data:", error);
         return {
-            statusCode: 400,
+            statusCode: 401,
             body: JSON.stringify({ message: "Error with DB" })
         };
     }
