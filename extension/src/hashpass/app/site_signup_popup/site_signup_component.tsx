@@ -1,4 +1,5 @@
 'use client';
+import React from "react";
 import { useEffect, useState } from "react";
 import { decrypt } from "../security_components/tools/AES_tool"
 import {calculatePassword} from '../security_components/components/password_generator';
