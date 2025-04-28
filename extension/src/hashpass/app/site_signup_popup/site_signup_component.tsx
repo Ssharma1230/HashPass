@@ -13,28 +13,28 @@ export default function Site_SignUp() {
     const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
     const [spinnerMessage, setSpinnerMessage] = useState('');
 
-    const [userId, setUserId] = useState("");
+    const [UUID, setUUID] = useState("");
     
     useEffect(() => {
         async function fetchUUID(): Promise<string>{
             return new Promise((resolve) => {
                 chrome.storage.sync.get(["uuid"], (result) => {
-                    const userId = result.uuid || "";
-                    resolve(userId);
+                    const UUID = result.uuid || "";
+                    resolve(UUID);
                 });
             });
         }
         
         // Set the UUID from storage
         fetchUUID().then((fetchedUuid) => {
-            setUserId(fetchedUuid);
+            setUUID(fetchedUuid);
         });
     }, []); // Empty dependency array means this runs once when the component mounts
 
     const handlePassEntry = async () => {
         setLoading(true);
         setSpinnerMessage('Generating Password...');
-        console.log("UUID: ", userId);
+        console.log("UUID: ", UUID);
         
         try {
             const userIdEncrypted = await getEncryptedUuid(UUID);
