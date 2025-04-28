@@ -10,6 +10,8 @@
         "mathjs": "^14.4.0"
     },
     "scripts": {
-        "build": "tsc"
+        "build": "npx tsc",
+        "zip": "(zip -r genPass.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath genPass.zip)",
+        "move": "(mv genPass.zip ../../terraform || powershell Move-Item genPass.zip ../../terraform)"
     }
 }

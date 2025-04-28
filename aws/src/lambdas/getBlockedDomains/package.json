@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "npx tsc",
-        "zip": "(zip getBlockedDomains.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath getBlockedDomains.zip)",
+        "zip": "(zip -r getBlockedDomains.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath getBlockedDomains.zip)",
         "move": "(mv getBlockedDomains.zip ../../terraform || powershell Move-Item getBlockedDomains.zip ../../terraform)"
     },
     "devDependencies": {

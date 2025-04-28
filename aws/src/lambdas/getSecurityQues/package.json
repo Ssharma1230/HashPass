@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "npx tsc",
-        "zip": "(zip getSecurityQues.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath getSecurityQues.zip)",
+        "zip": "(zip -r getSecurityQues.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath getSecurityQues.zip)",
         "move": "(mv getSecurityQues.zip ../../terraform || powershell Move-Item getSecurityQues.zip ../../terraform)"
     },
     "devDependencies": {

@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "npx tsc",
-        "zip": "(zip insertDomainName.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath insertDomainName.zip)",
+        "zip": "(zip -r insertDomainName.zip index.js node_modules || powershell Compress-Archive -Path index.js, node_modules -DestinationPath insertDomainName.zip)",
         "move": "(mv insertDomainName.zip ../../terraform || powershell Move-Item insertDomainName.zip ../../terraform)"
     },
     "devDependencies": {
