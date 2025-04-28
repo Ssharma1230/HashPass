@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { decrypt } from "../security_components/tools/AES_tool";
 import { calculatePassword } from '../security_components/components/password_generator';
 import { parse } from "tldts";
+import { getEncryptedUuid } from '../site_login_popup/site_login_component';
 
 export default function Site_SignUp() {
-    const UUID = "f98699a0-d010-4a68-833e-fc9cbbcdf800";
-    const userIdEncrypted = "W3CeGzefGlIYyBS5RjiZnFmBI0RdTc8EJDQmwLM1LyUw3zTfGa6botvDVJvE2JlMM5/P8FZOjPRPC7TXJ/B02A==";
+    const userId = "randomuuid";
 
     const [keyString, setKeyString] = useState("");
     const [loading, setLoading] = useState(false);
@@ -19,11 +19,12 @@ export default function Site_SignUp() {
         setSpinnerMessage('Generating Password...');
         
         try {
+            const userIdEncrypted = await getEncryptedUuid(userId);
             const decryptedText = await decrypt(userIdEncrypted, keyString);
-            if (decryptedText === UUID) {
+            if (decryptedText === userId) {
                 console.log("Valid Simple passphrase: User Authenticated");
                 
-                const domain = parse(window.location.href).domain;
+                const domain = parse(window.location.href).domain ?? "";
                 console.log("Parsed Domain:", domain);
 
                 try {
@@ -32,7 +33,7 @@ export default function Site_SignUp() {
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({ UUID, domain })
+                        body: JSON.stringify({ userId, domain })
                     });
 
                     if (!response.ok) {
@@ -45,7 +46,7 @@ export default function Site_SignUp() {
                 }
 
                 // Generate password after success
-                const password = await calculatePassword(keyString);
+                const password = await calculatePassword(keyString, domain, userIdEncrypted);
                 setGeneratedPassword(password);
                 chrome.runtime.sendMessage({
                   action: "fillPassword",
