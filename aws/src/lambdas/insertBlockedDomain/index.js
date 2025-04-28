@@ -8,7 +8,28 @@ const dbConfig = {
     database: process.env.DB_NAME,
 };
 const handler = async (event) => {
-    console.log('EVENT: \n' + JSON.stringify(event, null, 2));
+    console.log('Received event:', JSON.stringify(event, null));
+    let httpMethod;
+    try {
+        httpMethod = event.requestContext.http.method;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.log("APIGatewayEvent");
+        }
+        httpMethod = event.httpMethod;
+    }
+    if (httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+            },
+            body: ''
+        };
+    }
     let request_body;
     try {
         if (event.body) {

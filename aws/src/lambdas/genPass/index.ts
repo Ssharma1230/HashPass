@@ -1,8 +1,17 @@
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { APIGatewayEvent, APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { calculatePassword } from './src/password_generator';
 
-const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
-    const httpMethod = event.requestContext.http.method;
+const handler = async (event: APIGatewayEvent | APIGatewayProxyResultV2): Promise<APIGatewayProxyResultV2> => {
+    console.log('Received event:', JSON.stringify(event, null));
+    let httpMethod: string;
+    try {
+      httpMethod = (event as APIGatewayProxyEventV2).requestContext.http.method;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log("APIGatewayEvent");
+      }
+      httpMethod = (event as APIGatewayEvent).httpMethod;
+    }
     if (httpMethod === 'OPTIONS') {
       return {
         statusCode: 200,
@@ -18,7 +27,7 @@ const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyRe
         //const dataToHash = typeof event.body === 'string' ? event.body : JSON.stringify(event.body, null, 2);
         //const slt = 'my-static-salt'; // Figure out how to get this value from event as a json and stringify it like in the line above
 
-        const body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+        const body = typeof (event as APIGatewayEvent).body === "string" ? JSON.parse((event as APIGatewayEvent).body || "") : (event as APIGatewayEvent).body;
 
         const salt: string = body.salt;
         const domain_name: string = body.domain_name;

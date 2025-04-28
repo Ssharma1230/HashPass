@@ -7,7 +7,10 @@ const dbConfig = {
     database: process.env.DB_NAME,
 };
 const handler = async (event) => {
+<<<<<<< HEAD
+=======
     console.log('Received event:', JSON.stringify(event, null));
+>>>>>>> main
     let httpMethod;
     try {
         httpMethod = event.requestContext.http.method;
@@ -29,7 +32,10 @@ const handler = async (event) => {
             body: ''
         };
     }
+<<<<<<< HEAD
+=======
     let request_body;
+>>>>>>> main
     try {
         if (event.body) {
             request_body = JSON.parse(event.body);
