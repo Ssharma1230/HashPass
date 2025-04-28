@@ -36,6 +36,11 @@ export default function Site_SignUp() {
                         body: JSON.stringify({ UUID, domain })
                     });
 
+                    if (response.status === 401) {
+                      console.log("Duplicate entry detected, launching login popup...");
+                      chrome.runtime.sendMessage({ action: "detected_login_form" });
+                      return;
+                    }
                     if (!response.ok) {
                         throw new Error("Failed to add domain to DB");
                     }
