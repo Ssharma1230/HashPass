@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { APIGatewayEvent, APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-=======
-import {APIGatewayProxyEventV2,APIGatewayProxyResult} from "aws-lambda";
->>>>>>> main
 import { createConnection } from 'mysql2/promise';
 
 const dbConfig = {
