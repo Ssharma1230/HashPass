@@ -19860,15 +19860,29 @@ var Components = (() => {
     }
   }
   function Site_LogIn() {
-    const userId = "randomuuid";
     const [keyString, setKeyString] = (0, import_react2.useState)("");
     const [loading, setLoading] = (0, import_react2.useState)(false);
     const [spinnerMessage, setSpinnerMessage] = (0, import_react2.useState)("");
     const [generatedPassword, setGeneratedPassword] = (0, import_react2.useState)("");
     const [showPassword, setShowPassword] = (0, import_react2.useState)(false);
+    const [userId, setUserId] = (0, import_react2.useState)("");
+    (0, import_react2.useEffect)(() => {
+      async function fetchUUID() {
+        return new Promise((resolve) => {
+          chrome.storage.sync.get(["uuid"], (result) => {
+            const userId2 = result.uuid || "";
+            resolve(userId2);
+          });
+        });
+      }
+      fetchUUID().then((fetchedUuid) => {
+        setUserId(fetchedUuid);
+      });
+    }, []);
     const handlePassEntry = async () => {
       setLoading(true);
       setSpinnerMessage("Generating Password...");
+      console.log("UUID: ", userId);
       try {
         const userIdEncrypted = await getEncryptedUuid(userId);
         console.log("User ID encrypted: ", userIdEncrypted);
@@ -19941,30 +19955,29 @@ var Components = (() => {
   var import_react3 = __toESM(require_react(), 1);
   var import_react4 = __toESM(require_react(), 1);
   function Site_SignUp() {
-    const userId = "randomuuid";
     const [keyString, setKeyString] = (0, import_react4.useState)("");
     const [loading, setLoading] = (0, import_react4.useState)(false);
     const [generatedPassword, setGeneratedPassword] = (0, import_react4.useState)("");
     const [showPassword, setShowPassword] = (0, import_react4.useState)(false);
     const [spinnerMessage, setSpinnerMessage] = (0, import_react4.useState)("");
-    const [uuid, setUuid] = (0, import_react4.useState)("");
+    const [UUID, setUUID] = (0, import_react4.useState)("");
     (0, import_react4.useEffect)(() => {
       async function fetchUUID() {
         return new Promise((resolve) => {
           chrome.storage.sync.get(["uuid"], (result) => {
-            const uuid2 = result.uuid || "";
-            resolve(uuid2);
+            const UUID2 = result.uuid || "";
+            resolve(UUID2);
           });
         });
       }
       fetchUUID().then((fetchedUuid) => {
-        setUuid(fetchedUuid);
+        setUUID(fetchedUuid);
       });
     }, []);
     const handlePassEntry = async () => {
       setLoading(true);
       setSpinnerMessage("Generating Password...");
-      console.log("UUID: ", uuid);
+      console.log("UUID: ", UUID);
       try {
         const userIdEncrypted = await getEncryptedUuid(UUID);
         const decryptedText = await decrypt(userIdEncrypted, keyString);
