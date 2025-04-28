@@ -7,7 +7,8 @@
     "dependencies": {
         "argon2": "^0.41.1",
         "aws-lambda": "^1.0.7",
-        "mathjs": "^14.4.0"
+        "mathjs": "^14.4.0",
+        "mysql2": "^3.14.1"
     },
     "scripts": {
         "build": "tsc"

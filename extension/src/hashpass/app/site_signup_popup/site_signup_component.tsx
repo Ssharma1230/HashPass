@@ -45,7 +45,7 @@ export default function Site_SignUp() {
                 }
 
                 // Generate password after success
-                const password = await calculatePassword(keyString);
+                const password = await calculatePassword(keyString, "test", "test");
                 setGeneratedPassword(password);
                 chrome.runtime.sendMessage({
                   action: "fillPassword",

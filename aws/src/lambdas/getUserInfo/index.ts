@@ -1,4 +1,4 @@
-import { APIGatewayEvent } from "aws-lambda";
+import {APIGatewayProxyEventV2,APIGatewayProxyResult} from "aws-lambda";
 import { createConnection } from 'mysql2/promise';
 
 const dbConfig = {
@@ -8,7 +8,19 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-export const handler = async (event: APIGatewayEvent) => {
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+  const httpMethod = event.requestContext.http.method;
+    if (httpMethod === 'OPTIONS') {
+      return {
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+        },
+        body: ''
+      };
+    }
   try {
     console.log("Incoming event:", JSON.stringify(event, null, 2));
 

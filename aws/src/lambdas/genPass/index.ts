@@ -21,17 +21,10 @@ const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyRe
         const body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
 
         const salt: string = body.salt;
+        const domain_name: string = body.domain_name;
+        const encrypted_userid: string = body.encrypted_userid;
 
-        const strong_password = await calculatePassword(salt);
-
-        /*const hashValue = await argon2.hash(dataToHash, {
-          salt: slt,
-          type: argon2.argon2id,
-          timeCost: 2,          // Number of iterations.
-          memoryCost: 65536,    // Memory in KiB.
-          hashLength: 32,       // Length of the resulting hash.
-          parallelism: 1,
-        });*/
+        const strong_password = await calculatePassword(salt, domain_name, encrypted_userid);
 
 
         return {
@@ -56,5 +49,4 @@ const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyRe
         };
       }
 }; 
-
 module.exports = { handler };

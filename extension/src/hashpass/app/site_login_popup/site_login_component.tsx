@@ -20,7 +20,7 @@ export default function Site_LogIn() {
         try {
             const decryptedText = await decrypt(userIdEncrypted, keyString);
             if (decryptedText === userId) {
-                const password = await calculatePassword(keyString);
+                const password = await calculatePassword(keyString, "test", "test");
                 setGeneratedPassword(password);
             } else {
                 console.log("Invalid Simple Passphrase");
