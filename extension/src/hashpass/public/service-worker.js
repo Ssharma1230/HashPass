@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener((message, sender) => {
+chrome.runtime.onMessage.addListener(async (message, sender) => {
   if (message.action === "fillPassword") {
     console.log("Received message:", message);
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
@@ -30,12 +30,50 @@ chrome.runtime.onMessage.addListener((message, sender) => {
   // Check that sender.tab exists so we can target the correct tab
   if (!sender.tab || !sender.tab.id) return;
 
+  const uuid = await getUUID();
+
+  let blockedDomains = [];
+  try {
+    const response = await fetch("https://8fy84busdk.execute-api.us-east-1.amazonaws.com/API/getBlockedDomains", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ uuid: uuid })
+    });
+    if (!response.ok) {
+        throw new Error("Failed to get domains");
+    }
+    blockedDomains = await response.json();
+  } catch (error) {
+    console.error(`Error fetching blocked domains for ${uuid}:`, error);
+  }
+  
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.url) return "";
+  const url = new URL(tab.url);
+  let domain = url.hostname.replace(/^(?:.*\.)?([^.]+\.[^.]+)$/, "$1");
+  console.log("Domain:", domain);
+
+  if (domain && blockedDomains.includes(domain)) {
+    console.log("Domain is blocked:", domain);
+    return;
+  }
+
   if (message.action === "detected_login_form") {
     chrome.tabs.sendMessage(sender.tab.id, { action: "injectLoginPopup" });
   } else if (message.action === "detected_signup_form") {
     chrome.tabs.sendMessage(sender.tab.id, { action: "injectSignupPopup" });
   }
 }); 
+
+function getUUID() {
+    return new Promise((resolve) => {
+      chrome.storage.sync.get(["uuid"], (result) => {
+        resolve(result.uuid);
+      });
+    });
+}
 
 function injectPassword(passphrase) {
   const attempt = () => {

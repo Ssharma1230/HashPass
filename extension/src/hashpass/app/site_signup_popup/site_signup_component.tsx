@@ -1,13 +1,12 @@
 'use client';
-import React, { useState } from 'react';
-import { decrypt } from "../security_components/tools/AES_tool";
-import { calculatePassword } from '../security_components/components/password_generator';
+import React from "react";
+import { useEffect, useState } from "react";
+import { decrypt } from "../security_components/tools/AES_tool"
+import {calculatePassword} from '../security_components/components/password_generator';
 import { parse } from "tldts";
 import { getEncryptedUuid } from '../site_login_popup/site_login_component';
 
 export default function Site_SignUp() {
-    const UUID = "randomuuid";
-
     const [keyString, setKeyString] = useState("");
     const [loading, setLoading] = useState(false);
     const [generatedPassword, setGeneratedPassword] = useState(""); // Store generated password
@@ -16,9 +15,28 @@ export default function Site_SignUp() {
     const [blockSuccessMessage, setBlockSuccessMessage] = useState<string>('');
 
 
+    const [UUID, setUUID] = useState("");
+    
+    useEffect(() => {
+        async function fetchUUID(): Promise<string>{
+            return new Promise((resolve) => {
+                chrome.storage.sync.get(["uuid"], (result) => {
+                    const UUID = result.uuid || "";
+                    resolve(UUID);
+                });
+            });
+        }
+        
+        // Set the UUID from storage
+        fetchUUID().then((fetchedUuid) => {
+            setUUID(fetchedUuid);
+        });
+    }, []); // Empty dependency array means this runs once when the component mounts
+
     const handlePassEntry = async () => {
         setLoading(true);
         setSpinnerMessage('Generating Password...');
+        console.log("UUID: ", UUID);
         
         try {
             const userIdEncrypted = await getEncryptedUuid(UUID);
@@ -176,7 +194,7 @@ export default function Site_SignUp() {
                 Enter your passphrase:
               </label>
               <input
-                type="text"
+                type="password"
                 value={keyString}
                 onChange={(e) => setKeyString(e.target.value)}
                 placeholder="Simple Passphrase"

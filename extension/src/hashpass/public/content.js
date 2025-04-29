@@ -1,3 +1,30 @@
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log('URL Params:', urlParams.toString());
+    const uuid = urlParams.get('uuid');
+
+    if (uuid) {
+        chrome.storage.sync.set({ uuid }, () => {
+            console.log('UUID saved:', uuid);
+        });
+    }
+
+    const observer = new MutationObserver(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log('URL Params:', urlParams.toString());
+        const uuid = urlParams.get('uuid');
+
+        if (uuid) {
+            chrome.storage.sync.set({ uuid }, () => {
+                console.log('UUID saved:', uuid);
+            });
+        }
+    });
+
+    // Check for changes in the URL (in case of single-page application changes)
+    observer.observe(document, { childList: true, subtree: true });
+})();
+
 // Function to inject a login popup into the page using the bundled TSX component
 function injectLoginPopup() {
   console.log("Injecting Login Popup...");

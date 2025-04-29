@@ -19297,7 +19297,7 @@ var Components = (() => {
     renderSiteLogIn: () => renderSiteLogIn,
     renderSiteSignUp: () => renderSiteSignUp
   });
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // app/site_login_popup/site_login_component.tsx
@@ -19861,16 +19861,30 @@ var Components = (() => {
     }
   }
   function Site_LogIn() {
-    const userId = "randomuuid";
     const [keyString, setKeyString] = (0, import_react2.useState)("");
     const [loading, setLoading] = (0, import_react2.useState)(false);
     const [spinnerMessage, setSpinnerMessage] = (0, import_react2.useState)("");
     const [generatedPassword, setGeneratedPassword] = (0, import_react2.useState)("");
     const [showPassword, setShowPassword] = (0, import_react2.useState)(false);
     const [blockSuccessMessage, setBlockSuccessMessage] = (0, import_react2.useState)("");
+    const [userId, setUserId] = (0, import_react2.useState)("");
+    (0, import_react2.useEffect)(() => {
+      async function fetchUUID() {
+        return new Promise((resolve) => {
+          chrome.storage.sync.get(["uuid"], (result) => {
+            const userId2 = result.uuid || "";
+            resolve(userId2);
+          });
+        });
+      }
+      fetchUUID().then((fetchedUuid) => {
+        setUserId(fetchedUuid);
+      });
+    }, []);
     const handlePassEntry = async () => {
       setLoading(true);
       setSpinnerMessage("Generating Password...");
+      console.log("UUID: ", userId);
       try {
         const userIdEncrypted = await getEncryptedUuid(userId);
         console.log("User ID encrypted: ", userIdEncrypted);
@@ -19962,7 +19976,7 @@ var Components = (() => {
     )) : /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
       "input",
       {
-        type: "text",
+        type: "password",
         value: keyString,
         onChange: (e) => setKeyString(e.target.value),
         placeholder: "Simple Passphrase",
@@ -19988,17 +20002,32 @@ var Components = (() => {
 
   // app/site_signup_popup/site_signup_component.tsx
   var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
   function Site_SignUp() {
-    const UUID = "randomuuid";
-    const [keyString, setKeyString] = (0, import_react3.useState)("");
-    const [loading, setLoading] = (0, import_react3.useState)(false);
-    const [generatedPassword, setGeneratedPassword] = (0, import_react3.useState)("");
-    const [showPassword, setShowPassword] = (0, import_react3.useState)(false);
-    const [spinnerMessage, setSpinnerMessage] = (0, import_react3.useState)("");
-    const [blockSuccessMessage, setBlockSuccessMessage] = (0, import_react3.useState)("");
+    const [keyString, setKeyString] = (0, import_react4.useState)("");
+    const [loading, setLoading] = (0, import_react4.useState)(false);
+    const [generatedPassword, setGeneratedPassword] = (0, import_react4.useState)("");
+    const [showPassword, setShowPassword] = (0, import_react4.useState)(false);
+    const [spinnerMessage, setSpinnerMessage] = (0, import_react4.useState)("");
+    const [blockSuccessMessage, setBlockSuccessMessage] = (0, import_react4.useState)("");
+    const [UUID, setUUID] = (0, import_react4.useState)("");
+    (0, import_react4.useEffect)(() => {
+      async function fetchUUID() {
+        return new Promise((resolve) => {
+          chrome.storage.sync.get(["uuid"], (result) => {
+            const UUID2 = result.uuid || "";
+            resolve(UUID2);
+          });
+        });
+      }
+      fetchUUID().then((fetchedUuid) => {
+        setUUID(fetchedUuid);
+      });
+    }, []);
     const handlePassEntry = async () => {
       setLoading(true);
       setSpinnerMessage("Generating Password...");
+      console.log("UUID: ", UUID);
       try {
         const userIdEncrypted = await getEncryptedUuid(UUID);
         const decryptedText = await decrypt(userIdEncrypted, keyString);
@@ -20112,7 +20141,7 @@ var Components = (() => {
     )) : /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react3.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react3.default.createElement(
       "input",
       {
-        type: "text",
+        type: "password",
         value: keyString,
         onChange: (e) => setKeyString(e.target.value),
         placeholder: "Simple Passphrase",
@@ -20169,7 +20198,7 @@ var Components = (() => {
     };
     const root = (0, import_client.createRoot)(container);
     root.render(
-      /* @__PURE__ */ import_react4.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react4.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react4.default.createElement(Site_LogIn, null))
+      /* @__PURE__ */ import_react5.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react5.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react5.default.createElement(Site_LogIn, null))
     );
   }
   function renderSiteSignUp(container) {
@@ -20178,7 +20207,7 @@ var Components = (() => {
     };
     const root = (0, import_client.createRoot)(container);
     root.render(
-      /* @__PURE__ */ import_react4.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react4.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react4.default.createElement(Site_SignUp, null))
+      /* @__PURE__ */ import_react5.default.createElement("div", { style: popupWrapperStyle }, /* @__PURE__ */ import_react5.default.createElement("button", { style: closeButtonStyle, onClick: handleClose }, "\xD7"), /* @__PURE__ */ import_react5.default.createElement(Site_SignUp, null))
     );
   }
   return __toCommonJS(popup_components_exports);
