@@ -30,14 +30,7 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
   // Check that sender.tab exists so we can target the correct tab
   if (!sender.tab || !sender.tab.id) return;
 
-  let uuid;
-  chrome.storage.sync.get(["uuid"], (result) => {
-    uuid = result.uuid;
-    if (!uuid) {
-      console.error("UUID not found in storage.");
-      return;
-    }
-  });
+  const uuid = await getUUID();
 
   let blockedDomains = [];
   try {
@@ -49,13 +42,19 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
         body: JSON.stringify({ uuid: uuid })
     });
     if (!response.ok) {
-        throw new Error("Failed to add domain to DB");
+        throw new Error("Failed to get domains");
     }
     blockedDomains = await response.json();
   } catch (error) {
-    console.error("Error fetching blocked domains:", error);
+    console.error(`Error fetching blocked domains for ${uuid}:`, error);
   }
-  const domain = new URL(window.location.href).hostname ?? "";
+  
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.url) return "";
+  const url = new URL(tab.url);
+  let domain = url.hostname.replace(/^(?:.*\.)?([^.]+\.[^.]+)$/, "$1");
+  console.log("Domain:", domain);
+
   if (domain && blockedDomains.includes(domain)) {
     console.log("Domain is blocked:", domain);
     return;
@@ -67,6 +66,14 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
     chrome.tabs.sendMessage(sender.tab.id, { action: "injectSignupPopup" });
   }
 }); 
+
+function getUUID() {
+    return new Promise((resolve) => {
+      chrome.storage.sync.get(["uuid"], (result) => {
+        resolve(result.uuid);
+      });
+    });
+}
 
 function injectPassword(passphrase) {
   const attempt = () => {
