@@ -191,7 +191,7 @@ export default function Site_LogIn() {
                           Enter your passphrase:
                       </label>
                       <input
-                          type="text"
+                          type="password"
                           value={keyString}
                           onChange={(e) => setKeyString(e.target.value)}
                           placeholder="Simple Passphrase"

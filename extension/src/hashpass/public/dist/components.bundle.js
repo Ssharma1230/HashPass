@@ -19976,7 +19976,7 @@ var Components = (() => {
     )) : /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react2.default.createElement(
       "input",
       {
-        type: "text",
+        type: "password",
         value: keyString,
         onChange: (e) => setKeyString(e.target.value),
         placeholder: "Simple Passphrase",
@@ -20141,7 +20141,7 @@ var Components = (() => {
     )) : /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("div", { className: "mb-5" }, /* @__PURE__ */ import_react3.default.createElement("label", { className: "block text-sm font-medium text-gray-600 mb-2" }, "Enter your passphrase:"), /* @__PURE__ */ import_react3.default.createElement(
       "input",
       {
-        type: "text",
+        type: "password",
         value: keyString,
         onChange: (e) => setKeyString(e.target.value),
         placeholder: "Simple Passphrase",
