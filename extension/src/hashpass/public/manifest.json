@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "HashPass",
   "version": "1.0",
-  "description": "A Chrome extension with React and Next.js",
+  "description": "A Chrome extension that generates and manages passwords securely.",
   "permissions": ["storage", "scripting", "tabs", "activeTab"],
   "host_permissions": ["<all_urls>"],
   "background": {
